@@ -1,4 +1,4 @@
-#Carte interactive des fonds de restructuration des locaux d'actté
+#Carte interactive des fonds de restructuration des locaux d'activité
 En cours de développement
 	
 Lien d'accès à la carte interactive :	
