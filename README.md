@@ -1,8 +1,8 @@
-#Carte interactive des coopérations interterritoriales
+#Carte interactive des fonds de restructuration des locaux d'actté
 En cours de développement
 	
 Lien d'accès à la carte interactive :	
-https://anct-carto.github.io/cooperations/
+https://anct-carto.github.io/fond_rla
 
 Les cartes sont réalisées par le service cartographie de l'ANCT :
 https://cartotheque.anct.gouv.fr/cartes
