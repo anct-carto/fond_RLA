@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<!-- Développement : Mélodie Martin - service cartographie de l'ANCT - 2021 -->
+
+    <meta charset="utf-8" />
+    <title>Fonds_RLA</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="shortcut icon" type="image/png" href="img/picto_favicon.png"/>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="src/leaflet-sidebar.css" />
+	<link rel="stylesheet" href="src/leaflet-search.css" />
+	<link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
+	<link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" href="style_menu.css" />
+	<link rel="stylesheet" href="src/awesomeplete.css" />
+	
+	
+</head>
+	
+
+
+<body>
+	
+	<!-- Construction de panneau latéral -->
+    <div id="sidebar" class="sidebar collapsed">
+        
+		 <!-- Boutons de menu -->
+		<div class="sidebar-tabs" id="barre-verticale">
+            <ul role="tablist" >
+                <li><a role="tab" id="logo" title="Retour à l'accueil" class="onglets"><i style="vertical-align:middle;" class="fas fa-home"></i></a></li>
+					<div class="tip" id='tip1'>Accueil</div>
+				<li><a id="info" role="tab" title="infos" class="onglets"><i style="vertical-align:middle;" class="fa fa-question"></i></a></li>
+					<div class="tip" id='tip3'>En savoir plus</div>
+			</ul>
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div class="sidebar-content">
+            <div class="sidebar-pane" id="home">
+                
+				<h1>Carte interactive des fonds de restructuration des locaux d’activité 
+				<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                </h1>
+				
+				<!-- Page d'accueil -->
+				<div class="presentation" id="defaut">
+					
+					<span class="bouton_reinitialiser" onclick="initFiltres();" title="Réinitialiser les filtres">Voir toutes les opérations</span>
+					
+					<div class="divTableCell">
+					<h3 class="">Filtrer les opérations&nbsp;:</h3>
+					<ul id="menu_themes" class="menu">
+						<li><a id="selectionner_programme">Tous les programmes</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
+							<ul id="liste_programmes">		
+							</ul>
+						</li>	
+					</ul>
+					<ul id="menu_modalites" class="menu">
+						<li><a id="selectionner_porteur">Tous les opérateurs</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
+							<ul id="liste_porteurs">
+									
+							</ul>
+						</li>
+					</ul>
+					
+					</div>
+					
+					<div class="divTableCell"  >
+						<h3 class="">Rechercher une opération par son nom&nbsp;:</h3>
+						<input type="text" title="nom de l'opération" autocomplete="off" placeholder="Nom de l'opération" id ="searchField">
+					</div>
+					
+					<div class="divTableCell">
+		
+					<h3 class="">Liste des opérations &nbsp;:</h3>
+					<div class="description cooperation" id="liste_toutes_operations"></div>
+					</div>
+					
+					
+				</div>
+				
+				<!-- Contenu de la fiche d'information sur les porteurs -->
+				<div class="divTable" id="fiche_porteur">
+					
+					<h3 class="divTableRow">Porteur</h3>
+					<h2 class="porteur" id="nom_porteur"></h2>
+					
+					<div class="divTableBody">
+					
+						<div class="divTableCell">
+								<h3 class="divTableRow">Type de porteur</h3>
+								<div class="divTableRow description" id="statut_porteur"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Nom de la commune</h3>
+								<div class="divTableRow description" id="nom_com"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Adresse postale</h3>
+								<div class="divTableRow description" id="adresse"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Site Internet</h3>
+								<div class="divTableRow description" id="internet"></div>
+						</div>
+					
+					
+						<h3 class="">Liste des opérations de ce porteur&nbsp;:</h3>
+						<div class="description cooperation" id="liste_operations"></div>
+						
+						<div class="retour"><img src='img/fleche.png' style='vertical-align:middle; width:20px; padding:0px 15px;'  />Retour</div>
+					</div>	
+				</div>
+				
+				<!-- Contenu de la fiche d'information sur les opérations -->
+				<div class="divTable" id="fiche_operation">
+					
+					<h3 class="divTableRow">Opération</h3>
+					<h2 class="operation" id="nom_operation"></h2>
+					
+					<div class="divTableBody">
+						<div class="divTableCell">
+								<h3 class="divTableRow">Nom de la commune</h3>
+								<div class="divTableRow description" id="nom_com"></div>
+						</div>
+						
+						<div class="divTableCell">
+								<h3 class="divTableRow">périmètre d'intervention</h3>
+								<div class="divTableRow description" id="perimetre_intervention"></div>
+						</div>
+						
+						<div class="divTableCell">
+								<h3 class="divTableRow">Nombre de locaux</h3>
+								<div class="divTableRow description" id="nb_locaux"></div>
+						</div>
+						
+						<div class="divTableCell">
+								<h3 class="divTableRow">Surface en m²</h3>
+								<div class="divTableRow description" id="surf"></div>
+						</div>
+						
+						<div class="divTableCell">
+								<h3 class="divTableRow">Avancement</h3>
+								<div class="divTableRow description " id="avancement"></div>
+						</div>
+						
+						<div class="divTableCell">
+								<h3 class="divTableRow">Date de livraison prévisionnelle</h3>
+								<div class="divTableRow description " id="livraison_prev"></div>
+						</div>
+						
+						<div class="retour"><img src='img/fleche.png' style='vertical-align:middle; width:20px; padding:0px 15px;'  />Retour</div>
+					</div>	
+				</div>
+				
+				
+				<!-- Page d'infos -->
+				<div class="divTable" id="divInfos">	
+						
+					<div>
+						<p>Bienvenue sur la carte interactive des <span id="infos" style="cursor:pointer;" onmouseover="document.getElementById('def').style.display = 'block'" onmouseout="document.getElementById('def').style.display = 'none'" >......  proposée par l’Agence nationale de la cohésion des territoires.</p>
+						<p>Cette carte vous permet de <strong>visualiser XXX opérations</strong>, ainsi que leur <strong>porteur.</strong></p>
+					</div>
+					
+					<div class="button_container">
+						<div class="bouton" onclick="retourAcceuil();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
+					</div>
+					
+					<div id="sources" style="width:100%;">
+						<p><i>Sources des données&nbsp;: <a href="https://agence-cohesion-territoires.gouv.fr/" class="hyperlien" target="_blank">ANCT</a>, Direction générale déléguée à l'appui opérationnel et stratégique • Réalisation&nbsp;: ANCT pôle ADT, <a href="https://cartotheque.anct.gouv.fr/cartes" class="hyperlien" target="_blank">service cartographie</a></i></p>
+						
+						<div>
+							<img src="img/logo_anct.png" alt="logo anct" style="width:60%; padding:3px; "/>
+							<img src="img/logo_france_relance.png" alt="logo france relance" style="width:25%; padding:3px; "/>
+						</div>
+					</div>
+				
+				</div>	
+					
+            </div>
+			
+        </div>
+		
+    </div>
+	
+	<!-- Bloc de la carte -->
+	
+	<div id="mapid"></div>
+
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+	
+    <script src="src/leaflet-sidebar.js"></script>
+	<script src="src/leaflet-search.js"></script>
+	<script src="src/randomColor-master/randomColor.js"></script>
+	<script type="text/javascript"  src="https://unpkg.com/leaflet.vectorgrid@1.2.0"></script>
+	<script type="text/javascript" src="data/masque.js"></script> <!-- fond de plan -->
+	<script type="text/javascript" src="data/toutes_couches.js"></script> <!-- fond de carte EPCI+départements+régions -->
+	<script type="text/javascript" src="data/cercles_drom.js"></script> <!-- cercles outre mer -->
+	<script type="text/javascript" src="data/toponymes.js"></script> <!-- toponymes communes epci départements regions -->
+	<script type="text/javascript" src= "src/awesomplete.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+	
+	
+    
+	<script>
+			
+		// Création de la carte
+		var map = L.map('mapid', {maxZoom:10, minZoom:5 })
+		.setView([46.5, -1.8], 6);
+		map.zoomControl.setPosition('topright');
+		map.attributionControl.addAttribution('<a href="https://cartotheque.anct.gouv.fr/cartes" style="text-decoration:none;" target="_blank ">ANCT</a>');
+			
+		//Ajout du panneau latéral
+		var sidebar = L.control.sidebar('sidebar').addTo(map);
+		sidebar.open('home');
+		
+		//Variables globales
+		porteur_choisi = 'p000'
+		programme_choisi = 'N00000000'
+		
+/* COULEURS - STYLES - LEGENDE */
+		
+		/*une couleur unique pour chaque territoire
+		var couleur;
+		function getColor() {
+			couleur = randomColor({ 
+				hue : 'orange',
+				luminosity: 'bright', //bright light dark
+				format: 'hex' // rgb rgba rgbArray hsl hsla hslArray hex
+				});
+			return couleur;
+		}*/
+		
+		//Définition des pictos
+		var LeafIcon = L.Icon.extend({
+		options: {
+			//shadowUrl: 'img/shadow.png',
+			//shadowSize:   [23, 45],
+			//shadowAnchor: [0, 0],
+			//iconSize:     [25, 25],
+			//iconAnchor:   [0, 0],
+			//popupAnchor:  [0, -30]
+		}
+		});
+		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [12,12], iconAnchor:[6,6]}),
+			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [24,24], iconAnchor:[12,12]}),
+			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]});
+		
+		
+/* CREATION DES COUCHES */		
+		
+		//Niveaux d'affichage des couches
+		map.createPane('fond');
+		map.getPane('fond').style.zIndex = 500;
+		map.createPane('contour');
+		map.getPane('contour').style.zIndex = 500;
+		map.createPane('cercles');
+		map.getPane('cercles').style.zIndex = 510;
+		map.createPane('operations');
+		map.getPane('operations').style.zIndex = 545;
+		map.createPane('porteurs');
+		map.getPane('porteurs').style.zIndex = 520;
+		//map.createPane('geomCible2');
+		//map.getPane('geomCible2').style.zIndex = 530;
+		//map.createPane('geomCible');
+		//map.getPane('geomCible').style.zIndex = 540;
+		//map.createPane('lines');
+		//map.getPane('lines').style.zIndex = 550;
+		map.createPane('labels');
+		map.getPane('labels').style.zIndex = 560;
+		
+		
+		//Couches du fond de carte
+		Cache = L.geoJSON(JS_masque, {color: "#185936", weight: 0, opacity: 1, fillOpacity: 1, pane: "fond"}).addTo(map);
+		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 0.5, opacity: 0.2, fillOpacity: 0, pane: "cercles"}).addTo(map);
+		
+		Fond_Regions = L.geoJSON(JS_tout, {
+			filter: function(feature, layer) {return feature.properties.type=="region"},
+			style : {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#E3DAD1", pane: "fond"}
+			}).addTo(map);
+		
+		Contour_Regions = L.geoJSON(JS_tout, {
+			filter: function(feature, layer) {return feature.properties.type=="region"},
+			style : {color: "#ffffff", weight: 1.3, opacity: 0.5, fillOpacity: 0, pane: "contour"}
+			}).addTo(map);
+		
+		Departements = L.geoJSON(JS_tout, {
+			filter: function(feature, layer) {return feature.properties.type=="departement"},
+			style: {color: "#ffffff", weight: 0.5, opacity: 0.5, fillOpacity: 0, pane: "contour"}
+			}).addTo(map);
+			
+		Contour_Epci = L.geoJSON(JS_tout, {
+			filter: function(feature, layer) {return feature.properties.type=="epci"},
+			style : {color: "#ffffff", weight: 0.2, opacity: 0.4, fillOpacity: 0, pane: "contour"}
+			}).addTo(map);
+		
+		//Création des labels
+		var createLabelIcon = function(labelClass,labelText){
+		return L.divIcon({ 
+		className:  labelClass,
+		iconSize: null,	
+		iconAnchor: [40,15],			
+		html: '<div class="label"><div class="'+labelClass+'">'+labelText+'</div></div>'
+		})
+		}
+		
+		//Label Regions
+		labelsReg = L.geoJSON(JS_toponymes, {
+				pointToLayer: function(feature, latlng) {
+					marker = L.marker(latlng,{icon:createLabelIcon("labelClassReg", feature.properties.libgeo), pane:'labels', interactive: false});
+					marker.properties = {};
+					marker.properties.nom = feature.properties.libgeo;
+					return marker;
+				},
+				filter : function(feature, layer) {
+					return feature.properties.layer == "region";
+				}		
+		}).addTo(map)
+		
+		//Label Departements
+		labelsDep = L.geoJSON(JS_toponymes, {
+				pointToLayer: function(feature, latlng) {
+					marker = L.marker(latlng,{icon:createLabelIcon("labelClassDep", feature.properties.libgeo),pane:'labels', interactive: false});
+					marker.properties = {};
+					marker.properties.nom = feature.properties.libgeo;
+					return marker;
+				},
+				filter : function(feature, layer) {
+					return feature.properties.layer == "departement";
+				}		
+		})
+		
+		//Label Epci
+		labelsEpci = L.geoJSON(JS_toponymes, {
+				pointToLayer: function(feature, latlng) {
+					marker = L.marker(latlng,{icon:createLabelIcon("labelClassEpci", feature.properties.libgeo),pane:'labels', interactive: false});
+					marker.properties = {};
+					marker.properties.nom = feature.properties.libgeo;
+					return marker;
+				},
+				filter : function(feature, layer) {
+					return feature.properties.layer == "epci";
+				}		
+		})
+		
+		//Ajout des données drive
+		//data_porteurs
+		var porteursSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1FFnqHxgOKn4MwJrkeqXopsHsrcHINQRaCAUPPgaUt5E/edit?usp=sharing'; // compte cgetcarto
+		//data_opérations
+		var operationsSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1jOqEQP034yqL825yz0CmxU_yv0_t50GtK0zvL13X8b4/edit?usp=sharing'; // compte cgetcarto
+		
+		function init() {
+			a = Tabletop({ 
+				key: operationsSpreadsheetUrl,
+				callback: showInfo_operations,
+				simpleSheet: true
+			});
+			b = Tabletop({ 
+				key: porteursSpreadsheetUrl,
+				callback: showInfo_porteurs,
+				simpleSheet: true
+			});
+		}
+		
+		//Création des couches de markers
+		var porteurs = new L.layerGroup();
+		var operations = new L.layerGroup();
+		porteurs.addTo(map);
+		operations.addTo(map);
+		var listePorteurs = [];
+		
+		//Opérations : aller chercher les données et créer les markers
+		function showInfo_operations(data, tabletop) {
+			for (var i in data){
+				
+				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_operation, pane:'operations'});
+				
+				marker.addTo(operations); marker.setIcon(operation_off);
+				//if (data[i].fiche_projet == 'non'){marker.addTo(acv); marker.setIcon(uncheckedIcon_off);}
+				//else if (data[i].fiche_projet == 'oui' ){marker.addTo(acv_projet); marker.setIcon(checkedIcon_off);}
+				
+				marker.properties = {};
+				marker.properties.id_operation = data[i].id_operation;
+				marker.properties.id_porteur = data[i].id_porteur;
+				marker.properties.nom_operation = data[i].nom_operation;
+				marker.properties.id_demande = data[i].id_demande;
+				marker.properties.nom_com = data[i].nom_com;
+				marker.properties.perimetre_intervention = data[i].perimetre_intervention;
+				marker.properties.nb_locaux = data[i].nb_locaux;
+				marker.properties.surf = data[i].surf;
+				marker.properties.avancement = data[i].avancement;
+				marker.properties.livraison_prev = data[i].livraison_prev;
+				marker.properties.livraison_reel = data[i].livraison_reel;
+				marker.properties.montant_demande = data[i].montant_demande;
+				marker.properties.montant_copil = data[i].montant_copil;
+				marker.properties.date_copil = data[i].date_copil;
+				
+				
+				marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
+				marker.on('click', function(e) {
+					infosOperations(e.target);
+					//markerCible(e.target);
+					});
+			
+			}
+		}
+		
+		//Opérations : aller chercher les données et créer les markers
+		function showInfo_porteurs(data, tabletop) {
+			for (var i in data){
+				
+				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_porteur, pane:'porteurs'});
+				
+				marker.addTo(porteurs); marker.setIcon(porteur_off);
+				//if (data[i].fiche_projet == 'non'){marker.addTo(acv); marker.setIcon(uncheckedIcon_off);}
+				//else if (data[i].fiche_projet == 'oui' ){marker.addTo(acv_projet); marker.setIcon(checkedIcon_off);}
+				
+				//Rempli le menu déroulant du filtre par porteur
+				document.getElementById("liste_porteurs").innerHTML +=
+						"<li onClick='filtre(programme_choisi, \""+data[i].id_porteur+"\"); porteur_choisi=\""+data[i].id_porteur+"\" ; document.getElementById(\"selectionner_porteur\").innerHTML = \""+data[i].nom_porteur+"\";'>"+
+						"<a href='#'>"+data[i].nom_porteur+"</a></li>";
+				
+				marker.properties = {};
+				marker.properties.id_porteur = data[i].id_porteur;
+				marker.properties.nom_porteur = data[i].nom_porteur;
+				marker.properties.statut_porteur = data[i].statut_porteur;
+				marker.properties.id_com = data[i].id_com;
+				marker.properties.id_postal = data[i].id_postal;
+				marker.properties.nom_com = data[i].nom_com;
+				marker.properties.adresse = data[i].adresse;
+				marker.properties.internet = data[i].internet;
+						
+				marker.bindTooltip(data[i].nom_porteur, {className: 'Tooltips Tooltip_porteur', direction: "center",  sticky:true});
+				marker.on('click', function(e) {
+					infosPorteurs(e.target);
+					//markerCible(e.target);
+					});
+			
+			}
+		}
+		
+		window.addEventListener('DOMContentLoaded', init);	
+
+		//Remplir le menu déroulant des programmes
+		function creerListeProgrammes() {
+			//var listeProgrammes = [['pr0','Tous les programmes']['pr1','N00000003'],['pr2','N00000005'],['pr3','N00000006']];
+			var listeProgrammes = ['N00000000','N00000003','N00000005','N00000006'];
+			for (var i = 0; i < listeProgrammes.length; i++) {
+				console.log(listeProgrammes[i]);
+				document.getElementById("liste_programmes").innerHTML +=
+					"<li onClick='filtre(\""+ listeProgrammes[i] +"\", porteur_choisi); programme_choisi = \""+ listeProgrammes[i] + "\" ; document.getElementById(\"selectionner_programme\").innerHTML = \""+listeProgrammes[i]+"\";' >"+
+					"<a href='#'>"+listeProgrammes[i]+"</a></li>";
+					//"<li>"+listeProgrammes[i]+"</li>";
+			}
+		}
+		creerListeProgrammes();
+		
+		
+/* FICHES OPERATIONS ET PORTEURS */
+		
+		//Action au clic sur un marker
+		function infosOperations(e) {
+			//ouverture de la sidebar
+			sidebar.open('home');
+			
+			//Modification de l'icone
+			//if(acv_select) {
+			//	if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_off);}
+			//	else {acv_select.setIcon(uncheckedIcon_off);}
+			//}
+			operation_select = e;
+			//if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_on);}
+			//else {acv_select.setIcon(uncheckedIcon_on);}
+			
+			//Remplissage de la popup
+			document.getElementById('fiche_operation').style.display = "block";
+			document.getElementById('divInfos').style.display = "none";
+			document.getElementById('defaut').style.display = "none";
+			document.getElementById('fiche_porteur').style.display = "none";
+			document.getElementById('nom_operation').innerHTML = operation_select.properties.nom_operation;
+			//document.getElementById('id_demande').innerHTML = operation_select.properties.id_demande;
+			document.getElementById('nom_com').innerHTML = operation_select.properties.nom_com;
+			document.getElementById('perimetre_intervention').innerHTML = operation_select.properties.perimetre_intervention;
+			document.getElementById('nb_locaux').innerHTML = operation_select.properties.nb_locaux;
+			document.getElementById('surf').innerHTML = operation_select.properties.surf;
+			document.getElementById('avancement').innerHTML = operation_select.properties.avancement;
+			document.getElementById('livraison_prev').innerHTML = operation_select.properties.livraison_prev;
+			
+			//if (acv_select.properties.fiche_projet=="oui") {document.getElementById('projet').innerHTML = "Projet de cœur de ville en cours : <br/><a href=\'fiches_projets/ficheprojet_"+acv_select.properties.id_acv+".pdf' target=\'_blank\' style=\'text-decoration:none; color:#ffc20e\'><strong>"+acv_select.properties.nom_projet+"</strong></a>";}
+			//else {document.getElementById('projet').innerHTML = "";}
+		}	
+		
+		//Action au clic sur un marker
+		function infosPorteurs(e) {
+			//ouverture de la sidebar
+			sidebar.open('home');
+			
+			//Modification de l'icone
+			//if(acv_select) {
+			//	if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_off);}
+			//	else {acv_select.setIcon(uncheckedIcon_off);}
+			//}
+			porteur_select = e;
+			//if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_on);}
+			//else {acv_select.setIcon(uncheckedIcon_on);}
+			
+			//Remplissage de la popup
+			document.getElementById('fiche_porteur').style.display = "block";
+			document.getElementById('fiche_operation').style.display = "none";
+			document.getElementById('divInfos').style.display = "none";
+			document.getElementById('defaut').style.display = "none";
+			document.getElementById('nom_porteur').innerHTML = porteur_select.properties.nom_porteur;
+			document.getElementById('nom_com').innerHTML = porteur_select.properties.nom_com;
+			document.getElementById('adresse').innerHTML = porteur_select.properties.adresse;
+			document.getElementById('internet').innerHTML = porteur_select.properties.internet;
+			
+			//Liste des opérations de ce porteur
+				document.getElementById('liste_operations').innerHTML = "<div>";
+				
+				for (var i = 0; i < operations.getLayers().length; i++) {
+					if(porteur_select.properties.id_porteur == operations.getLayers()[i].properties.id_porteur){
+						document.getElementById("liste_operations").innerHTML += "<li class='liste' >" + operations.getLayers()[i].properties.nom_operation + "</li>" ;
+						//"<li class='liste'" +
+						//"onMouseover='geometrieCibleHover(returnCoords(\""+listeTerrCoop[i].id_territoire+"\"), \"xy\", \"territoire\", jointure(\""+listeTerrCoop[i].id_territoire+"\", \"coop-terr\", \"nom_terr\"));'" +
+						//"onMouseout='map.removeLayer(geomCibHover);'" +
+						//"onclick='showFiche(\""+listeTerrCoop[i].id_territoire+"\", \"territoire\"); geometrieCible(returnCoords(\""+listeTerrCoop[i].id_territoire+"\"), \"territoire\"); '>" +
+						//"" + operations.getLayers()[i].properties.nom_operation +"</li>" ;
+					}
+				}
+				document.getElementById('liste_operations').innerHTML += "</div>";
+			
+			//if (acv_select.properties.fiche_projet=="oui") {document.getElementById('projet').innerHTML = "Projet de cœur de ville en cours : <br/><a href=\'fiches_projets/ficheprojet_"+acv_select.properties.id_acv+".pdf' target=\'_blank\' style=\'text-decoration:none; color:#ffc20e\'><strong>"+acv_select.properties.nom_projet+"</strong></a>";}
+			//else {document.getElementById('projet').innerHTML = "";}
+		}	
+		
+	
+/* ACTIONS */
+	
+		// Filtre les opérations en fonction du programme et du porteur choisis
+		function filtre(programme, porteur) {
+			
+			programme_choisi = programme;
+			porteur_choisi = porteur;
+			
+			console.log(programme, porteur);
+			
+			document.getElementById("liste_toutes_operations").innerHTML = "";
+			if (document.getElementById("awesomplete_list_1")){document.getElementById("awesomplete_list_1").innerHTML = "";}
+			document.getElementById('searchField').value = "";
+
+			if ( programme_choisi == 'N00000000' ) {
+					if (porteur_choisi == 'p000') {
+						operations.eachLayer(function(layer){
+								writeList(layer.properties.nom_operation);
+							});
+						}
+					else {
+						operations.eachLayer(function(layer){
+							if (layer.properties.id_porteur == porteur_choisi) {
+								writeList(layer.properties.nom_operation);
+								}
+							});
+						}
+				}		
+			else if (porteur_choisi == 'p000') {
+				//alert('choix du programme, tous les porteurs');
+				operations.eachLayer(function(layer){
+						if (layer.properties.id_demande == programme_choisi) {
+							writeList(layer.properties.nom_operation);
+							}
+					});
+				}
+			else {
+				operations.eachLayer(function(layer){
+					if (layer.properties.id_demande == programme_choisi && layer.properties.id_porteur == porteur_choisi) {
+						writeList(layer.properties.nom_operation);
+					}
+				});
+			}
+		}
+	
+		//Fonction d'écriture de la liste active des opérations
+		function writeList(e){
+			document.getElementById("liste_toutes_operations").innerHTML +=
+				"<li class='liste' >" +
+				//"onclick='map.flyToBounds(returnCoordsCoop(\""+id_coop+"\"), {paddingTopLeft:[300,0]}); showFiche(\"" +id_coop+"\", \"cooperation\"); geometrieCible(returnCoordsCoop(\""+id_coop+"\"), \"cooperation\"); '" +
+				//"onmouseover='geometrieCibleHover(returnCoordsCoop(\""+id_coop+"\"), \"xy\", \"cooperation\")'" +
+				//"onmouseout='map.removeLayer(geomCibHover);'>" +
+				"" + e + "</li>" ;
+		}
+	
+		function initFiltres() {
+			filtre('N00000000', porteur_choisi);
+			document.getElementById("selectionner_programme").innerHTML = "Tous les programmes";
+			filtre(programme_choisi, 'p000');
+			document.getElementById("selectionner_porteur").innerHTML = "Tous les opérateurs";
+		}
+		
+		// Fonctions générales de navigation
+		function resetView() {
+			map.setView([46.5, -1.8], 6);		
+		}
+		
+		function resetMap () {
+			sidebar.open('home');
+			}
+			
+		function retourAcceuil () {
+			resetView();
+			resetMap ();
+			//if(marker) {map.removeLayer(marker);}
+			document.getElementById('defaut').style.display = "block";
+			document.getElementById("divInfos").style.display = "none";
+			document.getElementById("fiche_operation").style.display = "none";
+			document.getElementById("fiche_porteur").style.display = "none";
+
+		}
+		
+		
+		//Action au clic sur "retour"
+		var boutons_retour = document.getElementsByClassName("retour");
+		for (var i = 0; i < boutons_retour.length; i++) {
+			boutons_retour[i].addEventListener('click', retourAcceuil, false);
+		}
+		
+		//Action au clic sur la carte
+		map.on('click', function(e) { 
+			//if(marker) {map.removeLayer(marker);}
+			event.stopPropagation();
+			
+			});
+		
+		//Actions sur "home"
+		document.getElementById("logo").addEventListener("click", function(event){
+			event.stopPropagation();
+			//document.getElementById('searchField').value = "";
+			retourAcceuil();
+		});
+		
+		document.getElementById("logo").addEventListener("mouseover", function(event){
+			document.getElementById('tip1').style.display = 'block'
+		});
+		
+		document.getElementById("logo").addEventListener("mouseout", function(event){
+			document.getElementById('tip1').style.display = 'none'
+		});
+		
+		//Actions sur "En savoir plus"
+		document.getElementById("info").addEventListener("click", function(event){
+			//alert('clic sur en savoir plus');
+			event.stopPropagation();
+			document.getElementById("divInfos").style.display = "block";
+			document.getElementById('fiche_operation').style.display = "none";
+			document.getElementById('defaut').style.display = "none";
+			document.getElementById('fiche_porteur').style.display = "none";
+			
+		});
+		
+		document.getElementById("info").addEventListener("mouseover", function(event){
+			document.getElementById('tip3').style.display = 'block'
+		});
+		
+		document.getElementById("info").addEventListener("mouseout", function(event){
+			document.getElementById('tip3').style.display = 'none'
+		});
+		
+		//Affichage des labels suivant le zoom
+		map.on('zoomend', function() {
+			var zoom = map.getZoom();
+			if (zoom < 8) {map.removeLayer(labelsDep); map.removeLayer(labelsEpci); map.addLayer(labelsReg);}
+			else if (zoom >= 8 && zoom < 10) { map.addLayer(labelsDep); map.removeLayer(labelsEpci); map.removeLayer(labelsReg);}
+			else if (zoom >= 10) {map.removeLayer(labelsDep);map.addLayer(labelsEpci); map.removeLayer(labelsReg);}
+		});
+
+/* BARRES DE RECHERCHE 	
+		
+		//Barre de recherche (en haut à droite)
+		var RechercheZoom = L.layerGroup([Territoires, labelsDep, labelsEpci, labelsReg]);
+		
+		var searchControl = new L.control.search({
+			layer: RechercheZoom,
+			initial: false,
+			position:'topright',
+			propertyName: 'nom',
+			collapsed: true,
+			marker: false,
+			//moveToLocation: function(latlng, title, map) {
+				//map.flyTo(latlng, 10);
+			//}
+		})
+		
+		var myIcon = L.icon({
+			iconUrl: 'img/picto_on.png',
+			iconAnchor: [20, 60]
+		});
+		
+		searchControl.on('search:locationfound', function(e) {
+			if(marker) {map.removeLayer(marker);}
+			marker = new L.Marker(e.latlng, {icon: myIcon, pane: "lines"}).addTo(map);
+			var adaptedZoom = 9;
+			if (e.layer.feature.properties.layer == "departement"){adaptedZoom = 9;}
+			else if (e.layer.feature.properties.layer == "epci"){adaptedZoom = 10;}
+			else if (e.layer.feature.properties.layer == "region"){adaptedZoom = 7;}
+			map.flyTo(e.latlng, adaptedZoom);
+		});
+		
+		map.addControl(searchControl);	
+		 
+		map.removeLayer(labelsDep); 
+		map.removeLayer(labelsEpci);*/
+		
+   </script>
+	
+	<!--<script type="text/javascript" src= "src/recherche.js"></script>-->
+	
+	
+</body>
+
+</html>
