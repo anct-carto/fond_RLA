@@ -104,12 +104,12 @@ mark:hover {
 	}
 
 .Tooltips {
-	font-size:1.15em;
+	font-size:1.1em;
 	line-height:1.1em;
 	padding:3 3px;
 	border:none;
 	font-weight: bold;	
-	margin: -25px 25px;
+	margin: -35px 35px;
 	white-space: normal;
 	text-align:left;
 	max-width:300px;
@@ -118,7 +118,7 @@ mark:hover {
 	}
 	
 .Tooltip_operation {
-	color:#8F2D56;
+	color:#00009d;
 	}
 
 .Tooltip_porteur {

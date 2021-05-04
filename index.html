@@ -60,12 +60,15 @@
 						</li>	
 					</ul>
 					<ul id="menu_modalites" class="menu">
-						<li><a id="selectionner_porteur">Tous les opérateurs</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
+						<li><a id="selectionner_porteur">Tous les porteurs</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
 							<ul id="liste_porteurs">
-									
+								<li onclick="TTporteur()"><a href='#'>Tous les porteurs</a></li>	
 							</ul>
 						</li>
 					</ul>
+					
+					
+	
 					
 					</div>
 					
@@ -209,18 +212,24 @@
 	<script>
 			
 		// Création de la carte
-		var map = L.map('mapid', {maxZoom:10, minZoom:5 })
+		var map = L.map('mapid', {maxZoom:17, minZoom:6 })
 		.setView([46.5, -1.8], 6);
 		map.zoomControl.setPosition('topright');
 		map.attributionControl.addAttribution('<a href="https://cartotheque.anct.gouv.fr/cartes" style="text-decoration:none;" target="_blank ">ANCT</a>');
-			
+		
+		// Choix du fond de carte 
+		var basemap = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+			attribution: '<a href="https://www.cget.gouv.fr/ressources/cartotheque" target="blank">CGET service Carto</a>',
+			maxZoom: 17
+		}).addTo(map);
+		
 		//Ajout du panneau latéral
 		var sidebar = L.control.sidebar('sidebar').addTo(map);
 		sidebar.open('home');
 		
 		//Variables globales
-		porteur_choisi = 'p000'
-		programme_choisi = 'N00000000'
+		porteur_choisi = 'Tous les porteurs'
+		programme_choisi = 'Tous les programmes'
 		
 /* COULEURS - STYLES - LEGENDE */
 		
@@ -246,10 +255,16 @@
 			//popupAnchor:  [0, -30]
 		}
 		});
-		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [12,12], iconAnchor:[6,6]}),
-			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [24,24], iconAnchor:[12,12]}),
-			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [14,14], iconAnchor:[7,7]}),
+		var operation_off_1 = new LeafIcon({iconUrl: 'img/picto_operation_off_1.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			operation_on_1 = new LeafIcon({iconUrl: 'img/picto_operation_on_1.png', iconSize: [18,18], iconAnchor:[9,9]}),
+			operation_off_2 = new LeafIcon({iconUrl: 'img/picto_operation_off_2.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			operation_on_2 = new LeafIcon({iconUrl: 'img/picto_operation_on_2.png', iconSize: [18,18], iconAnchor:[9,9]}),
+			operation_off_3 = new LeafIcon({iconUrl: 'img/picto_operation_off_3.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			operation_on_3 = new LeafIcon({iconUrl: 'img/picto_operation_on_3.png', iconSize: [18,18], iconAnchor:[9,9]}),
+			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [18,27], iconAnchor:[12,12]}),
 			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]});
+			
+		var picto_cible = new LeafIcon({iconUrl: 'img/picto_cible.png', iconSize: [20,20], iconAnchor:[10,10]});
 		
 		
 /* CREATION DES COUCHES */		
@@ -276,28 +291,32 @@
 		
 		
 		//Couches du fond de carte
-		Cache = L.geoJSON(JS_masque, {color: "#185936", weight: 0, opacity: 1, fillOpacity: 1, pane: "fond"}).addTo(map);
-		Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 0.5, opacity: 0.2, fillOpacity: 0, pane: "cercles"}).addTo(map);
+		//Cache = L.geoJSON(JS_masque, {color: "#185936", weight: 0, opacity: 1, fillOpacity: 1, pane: "fond"}).addTo(map);
+		//Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 0.5, opacity: 0.2, fillOpacity: 0, pane: "cercles"}).addTo(map);
 		
 		Fond_Regions = L.geoJSON(JS_tout, {
 			filter: function(feature, layer) {return feature.properties.type=="region"},
 			style : {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#E3DAD1", pane: "fond"}
-			}).addTo(map);
+			})
+			//.addTo(map);
 		
 		Contour_Regions = L.geoJSON(JS_tout, {
 			filter: function(feature, layer) {return feature.properties.type=="region"},
 			style : {color: "#ffffff", weight: 1.3, opacity: 0.5, fillOpacity: 0, pane: "contour"}
-			}).addTo(map);
+			})
+			//.addTo(map);
 		
 		Departements = L.geoJSON(JS_tout, {
 			filter: function(feature, layer) {return feature.properties.type=="departement"},
 			style: {color: "#ffffff", weight: 0.5, opacity: 0.5, fillOpacity: 0, pane: "contour"}
-			}).addTo(map);
+			})
+			//.addTo(map);
 			
 		Contour_Epci = L.geoJSON(JS_tout, {
 			filter: function(feature, layer) {return feature.properties.type=="epci"},
 			style : {color: "#ffffff", weight: 0.2, opacity: 0.4, fillOpacity: 0, pane: "contour"}
-			}).addTo(map);
+			})
+			//.addTo(map);
 		
 		//Création des labels
 		var createLabelIcon = function(labelClass,labelText){
@@ -320,7 +339,8 @@
 				filter : function(feature, layer) {
 					return feature.properties.layer == "region";
 				}		
-		}).addTo(map)
+		})
+		//.addTo(map)
 		
 		//Label Departements
 		labelsDep = L.geoJSON(JS_toponymes, {
@@ -369,9 +389,12 @@
 		
 		//Création des couches de markers
 		var porteurs = new L.layerGroup();
+		var porteursSelect = new L.layerGroup();
 		var operations = new L.layerGroup();
+		var operationsSelect = new L.layerGroup();
 		porteurs.addTo(map);
-		operations.addTo(map);
+		operationsSelect.addTo(map);
+		porteursSelect.addTo(map);
 		var listePorteurs = [];
 		
 		//Opérations : aller chercher les données et créer les markers
@@ -380,9 +403,12 @@
 				
 				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_operation, pane:'operations'});
 				
-				marker.addTo(operations); marker.setIcon(operation_off);
-				//if (data[i].fiche_projet == 'non'){marker.addTo(acv); marker.setIcon(uncheckedIcon_off);}
-				//else if (data[i].fiche_projet == 'oui' ){marker.addTo(acv_projet); marker.setIcon(checkedIcon_off);}
+				marker.addTo(operations); 
+				
+				if (data[i].niveau_avancement == '1'){marker.setIcon(operation_off_1); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_1); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_1); });}
+				else if (data[i].niveau_avancement == '2'){marker.setIcon(operation_off_2);}
+				else if (data[i].niveau_avancement == '3'){marker.setIcon(operation_off_3);}
+				else {marker.setIcon(operation_off_1);}
 				
 				marker.properties = {};
 				marker.properties.id_operation = data[i].id_operation;
@@ -404,11 +430,20 @@
 				marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
 				marker.on('click', function(e) {
 					infosOperations(e.target);
-					//markerCible(e.target);
+					markerCible(e.target);
 					});
 			
 			}
+			showPictosOperations();
 		}
+		
+		function showPictosOperations(){
+		operations.eachLayer(function(layer){
+			console.log(layer);
+			layer.addTo(operationsSelect);
+			});
+		}
+		
 		
 		//Opérations : aller chercher les données et créer les markers
 		function showInfo_porteurs(data, tabletop) {
@@ -442,6 +477,13 @@
 					});
 			
 			}
+			showPictosPorteurs();
+		}
+		
+		function showPictosPorteurs(){
+		porteurs.eachLayer(function(layer){
+			layer.addTo(porteursSelect);
+			});
 		}
 		
 		window.addEventListener('DOMContentLoaded', init);	
@@ -449,9 +491,8 @@
 		//Remplir le menu déroulant des programmes
 		function creerListeProgrammes() {
 			//var listeProgrammes = [['pr0','Tous les programmes']['pr1','N00000003'],['pr2','N00000005'],['pr3','N00000006']];
-			var listeProgrammes = ['N00000000','N00000003','N00000005','N00000006'];
+			var listeProgrammes = ['Tous les programmes','N00000003','N00000005','N00000006'];
 			for (var i = 0; i < listeProgrammes.length; i++) {
-				console.log(listeProgrammes[i]);
 				document.getElementById("liste_programmes").innerHTML +=
 					"<li onClick='filtre(\""+ listeProgrammes[i] +"\", porteur_choisi); programme_choisi = \""+ listeProgrammes[i] + "\" ; document.getElementById(\"selectionner_programme\").innerHTML = \""+listeProgrammes[i]+"\";' >"+
 					"<a href='#'>"+listeProgrammes[i]+"</a></li>";
@@ -541,64 +582,103 @@
 	
 /* ACTIONS */
 	
+		//Une cible sur le marker sélectionné
+		var markerCib;
+		function markerCible(e) {
+			if(markerCib) {map.removeLayer(markerCib);}
+			markerCib = new L.marker(new L.latLng(e._latlng), {icon: picto_cible});
+			markerCib.setZIndexOffset(-50);
+			markerCib.addTo(map);
+		}
+		
+	
 		// Filtre les opérations en fonction du programme et du porteur choisis
 		function filtre(programme, porteur) {
 			
 			programme_choisi = programme;
 			porteur_choisi = porteur;
 			
-			console.log(programme, porteur);
-			
 			document.getElementById("liste_toutes_operations").innerHTML = "";
 			if (document.getElementById("awesomplete_list_1")){document.getElementById("awesomplete_list_1").innerHTML = "";}
 			document.getElementById('searchField').value = "";
+			operationsSelect.clearLayers();
+			porteursSelect.clearLayers();
 
-			if ( programme_choisi == 'N00000000' ) {
-					if (porteur_choisi == 'p000') {
+			if ( programme_choisi == 'Tous les programmes' ) {
+					if (porteur_choisi == 'Tous les porteurs') {
 						operations.eachLayer(function(layer){
-								writeList(layer.properties.nom_operation);
+								writeList(layer);
+								layer.addTo(operationsSelect);
+							});
+						porteurs.eachLayer(function(layer){
+								layer.addTo(porteursSelect);
 							});
 						}
 					else {
 						operations.eachLayer(function(layer){
 							if (layer.properties.id_porteur == porteur_choisi) {
-								writeList(layer.properties.nom_operation);
+								writeList(layer);
+								layer.addTo(operationsSelect);
 								}
+							});
+						porteurs.eachLayer(function(layer){
+							if (layer.properties.id_porteur == porteur_choisi) {	
+								layer.addTo(porteursSelect);
+							}	
 							});
 						}
 				}		
-			else if (porteur_choisi == 'p000') {
-				//alert('choix du programme, tous les porteurs');
+			else if (porteur_choisi == 'Tous les porteurs') {
 				operations.eachLayer(function(layer){
 						if (layer.properties.id_demande == programme_choisi) {
-							writeList(layer.properties.nom_operation);
+							writeList(layer);
+							layer.addTo(operationsSelect);
 							}
 					});
+				porteurs.eachLayer(function(layer){
+					layer.addTo(porteursSelect);
+				});
 				}
 			else {
 				operations.eachLayer(function(layer){
 					if (layer.properties.id_demande == programme_choisi && layer.properties.id_porteur == porteur_choisi) {
-						writeList(layer.properties.nom_operation);
+						writeList(layer);
+						layer.addTo(operationsSelect);
 					}
+				});
+				porteurs.eachLayer(function(layer){
+					if (layer.properties.id_porteur == porteur_choisi) {	
+						layer.addTo(porteursSelect);
+					}	
 				});
 			}
 		}
 	
+		
+		
+		
 		//Fonction d'écriture de la liste active des opérations
 		function writeList(e){
+		
 			document.getElementById("liste_toutes_operations").innerHTML +=
-				"<li class='liste' >" +
-				//"onclick='map.flyToBounds(returnCoordsCoop(\""+id_coop+"\"), {paddingTopLeft:[300,0]}); showFiche(\"" +id_coop+"\", \"cooperation\"); geometrieCible(returnCoordsCoop(\""+id_coop+"\"), \"cooperation\"); '" +
-				//"onmouseover='geometrieCibleHover(returnCoordsCoop(\""+id_coop+"\"), \"xy\", \"cooperation\")'" +
-				//"onmouseout='map.removeLayer(geomCibHover);'>" +
-				"" + e + "</li>" ;
+				"<div class='liste' " +
+				//"onclick='console.log("+e+")'" +
+				//"onmouseover=console.log('coucou1') " +
+				//"onmouseout=console.log("+e+");>" +
+				">" + e.properties.nom_operation + "</div>" ;
 		}
 	
 		function initFiltres() {
-			filtre('N00000000', porteur_choisi);
+			filtre('Tous les programmes', porteur_choisi);
 			document.getElementById("selectionner_programme").innerHTML = "Tous les programmes";
-			filtre(programme_choisi, 'p000');
-			document.getElementById("selectionner_porteur").innerHTML = "Tous les opérateurs";
+			filtre(programme_choisi, 'Tous les porteurs');
+			document.getElementById("selectionner_porteur").innerHTML = "Tous les porteurs";
+		}
+		
+		function TTporteur(){
+			document.getElementById("selectionner_porteur").innerHTML = "Tous les porteurs";
+			filtre(programme_choisi,"Tous les porteurs");
+			porteur_choisi = "Tous les porteurs" ;
 		}
 		
 		// Fonctions générales de navigation
@@ -630,9 +710,8 @@
 		
 		//Action au clic sur la carte
 		map.on('click', function(e) { 
-			//if(marker) {map.removeLayer(marker);}
+			if(markerCib) {map.removeLayer(markerCib);}
 			event.stopPropagation();
-			
 			});
 		
 		//Actions sur "home"
@@ -669,13 +748,13 @@
 			document.getElementById('tip3').style.display = 'none'
 		});
 		
-		//Affichage des labels suivant le zoom
+		/*Affichage des labels suivant le zoom
 		map.on('zoomend', function() {
 			var zoom = map.getZoom();
 			if (zoom < 8) {map.removeLayer(labelsDep); map.removeLayer(labelsEpci); map.addLayer(labelsReg);}
 			else if (zoom >= 8 && zoom < 10) { map.addLayer(labelsDep); map.removeLayer(labelsEpci); map.removeLayer(labelsReg);}
 			else if (zoom >= 10) {map.removeLayer(labelsDep);map.addLayer(labelsEpci); map.removeLayer(labelsReg);}
-		});
+		});*/
 
 /* BARRES DE RECHERCHE 	
 		
@@ -710,9 +789,7 @@
 		});
 		
 		map.addControl(searchControl);	
-		 
-		map.removeLayer(labelsDep); 
-		map.removeLayer(labelsEpci);*/
+		 */
 		
    </script>
 	
