@@ -260,11 +260,17 @@
 			operation_off_2 = new LeafIcon({iconUrl: 'img/picto_operation_off_2.png', iconSize: [14,14], iconAnchor:[7,7]}),
 			operation_on_2 = new LeafIcon({iconUrl: 'img/picto_operation_on_2.png', iconSize: [18,18], iconAnchor:[9,9]}),
 			operation_off_3 = new LeafIcon({iconUrl: 'img/picto_operation_off_3.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			operation_on_3 = new LeafIcon({iconUrl: 'img/picto_operation_on_3.png', iconSize: [18,18], iconAnchor:[9,9]}),
-			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [18,27], iconAnchor:[12,12]}),
-			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [33,33], iconAnchor:[16.5,16.5]});
+			operation_on_3 = new LeafIcon({iconUrl: 'img/picto_operation_on_3.png', iconSize: [18,18], iconAnchor:[9,9]});
+		
+		var picto_cible_1 = new LeafIcon({iconUrl: 'img/picto_operateur_active_1.png', iconSize: [20,20], iconAnchor:[10,10]}),
+			picto_cible_2 = new LeafIcon({iconUrl: 'img/picto_operateur_active_2.png', iconSize: [20,20], iconAnchor:[10,10]}),
+			picto_cible_3 = new LeafIcon({iconUrl: 'img/picto_operateur_active_3.png', iconSize: [20,20], iconAnchor:[10,10]});
 			
-		var picto_cible = new LeafIcon({iconUrl: 'img/picto_cible.png', iconSize: [20,20], iconAnchor:[10,10]});
+		var	porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [22,22], iconAnchor:[11,11]}),
+			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [22,22], iconAnchor:[11,11]}),
+			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [30,30], iconAnchor:[15,15]});
+			
+		
 		
 		
 /* CREATION DES COUCHES */		
@@ -405,10 +411,9 @@
 				
 				marker.addTo(operations); 
 				
-				if (data[i].niveau_avancement == '1'){marker.setIcon(operation_off_1); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_1); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_1); });}
-				else if (data[i].niveau_avancement == '2'){marker.setIcon(operation_off_2);}
-				else if (data[i].niveau_avancement == '3'){marker.setIcon(operation_off_3);}
-				else {marker.setIcon(operation_off_1);}
+				if (data[i].niveau_avancement == '2'){marker.setIcon(operation_off_2); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_2); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_2); });}
+				else if (data[i].niveau_avancement == '3'){marker.setIcon(operation_off_3); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_3); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_3); });}
+				else marker.setIcon(operation_off_1); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_1); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_1); });
 				
 				marker.properties = {};
 				marker.properties.id_operation = data[i].id_operation;
@@ -439,7 +444,6 @@
 		
 		function showPictosOperations(){
 		operations.eachLayer(function(layer){
-			console.log(layer);
 			layer.addTo(operationsSelect);
 			});
 		}
@@ -451,9 +455,10 @@
 				
 				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_porteur, pane:'porteurs'});
 				
-				marker.addTo(porteurs); marker.setIcon(porteur_off);
-				//if (data[i].fiche_projet == 'non'){marker.addTo(acv); marker.setIcon(uncheckedIcon_off);}
-				//else if (data[i].fiche_projet == 'oui' ){marker.addTo(acv_projet); marker.setIcon(checkedIcon_off);}
+				marker.addTo(porteurs); 
+				marker.setIcon(porteur_off);
+				marker.on('mouseover', function(e) {e.target.setIcon(porteur_on);}); 
+				marker.on('mouseout', function(e) {e.target.setIcon(porteur_off);});
 				
 				//Rempli le menu déroulant du filtre par porteur
 				document.getElementById("liste_porteurs").innerHTML +=
@@ -586,7 +591,7 @@
 		var markerCib;
 		function markerCible(e) {
 			if(markerCib) {map.removeLayer(markerCib);}
-			markerCib = new L.marker(new L.latLng(e._latlng), {icon: picto_cible});
+			markerCib = new L.marker(new L.latLng(e._latlng), {icon: picto_cible_1});
 			markerCib.setZIndexOffset(-50);
 			markerCib.addTo(map);
 		}

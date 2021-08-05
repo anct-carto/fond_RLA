@@ -125,29 +125,6 @@ mark:hover {
 	color:#247BA0;
 	}
 	
-.TooltipSelect {
-	font-size:1.25em;
-	line-height:1.1em;
-	padding:3 3px;
-	border:none;
-	font-weight: bold;	
-	margin: 0px 200px;
-	color:black;
-	white-space: normal;
-	text-align:left;
-	max-width:500px;
-	min-width:300px;
-	background: none;
-	box-shadow: none;
-	}
-	
-.TooltipsTerr {
-	background-color: blue;
-	}
-
-.TooltipsCoop {
-	background-color: #af4d00;
-	}
 
 .bas {
 	margin-top:50px;
