@@ -205,7 +205,7 @@
 	<script type="text/javascript" src="data/cercles_drom.js"></script> <!-- cercles outre mer -->
 	<script type="text/javascript" src="data/toponymes.js"></script> <!-- toponymes communes epci départements regions -->
 	<script type="text/javascript" src= "src/awesomplete.js"></script>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.6.3/tabletop.min.js'></script>
 	
 	
     
@@ -407,7 +407,7 @@
 		function showInfo_operations(data, tabletop) {
 			for (var i in data){
 				
-				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_operation, pane:'operations'});
+				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_operation, pane:'operations'});
 				
 				marker.addTo(operations); 
 				
@@ -416,6 +416,8 @@
 				else marker.setIcon(operation_off_1); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_1); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_1); });
 				
 				marker.properties = {};
+				marker.properties.lat = data[i].lat;
+				marker.properties.lng = data[i].lng;
 				marker.properties.id_operation = data[i].id_operation;
 				marker.properties.id_porteur = data[i].id_porteur;
 				marker.properties.nom_operation = data[i].nom_operation;
@@ -453,7 +455,7 @@
 		function showInfo_porteurs(data, tabletop) {
 			for (var i in data){
 				
-				marker = new L.marker([data[i].lat, data[i].long], {title: data[i].nom_porteur, pane:'porteurs'});
+				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_porteur, pane:'porteurs'});
 				
 				marker.addTo(porteurs); 
 				marker.setIcon(porteur_off);
@@ -596,6 +598,15 @@
 			markerCib.addTo(map);
 		}
 		
+		//Sélection du marker depuis la liste
+		//var markerSelec;
+		//function markerSelec(la,lo) {
+			//if(markerSelec) {map.removeLayer(markerSelec);}
+			//markerSelec = new L.marker(new L.latLng(la, lo), {icon: operation_on_1});
+			//markerSelec.setZIndexOffset(-50);
+			//markerSelec.addTo(map);
+		//}
+		
 	
 		// Filtre les opérations en fonction du programme et du porteur choisis
 		function filtre(programme, porteur) {
@@ -664,10 +675,9 @@
 		
 		//Fonction d'écriture de la liste active des opérations
 		function writeList(e){
-		
 			document.getElementById("liste_toutes_operations").innerHTML +=
 				"<div class='liste' " +
-				//"onclick='console.log("+e+")'" +
+				//"onclick='console.log("+e.properties.lat+")'" +
 				//"onmouseover=console.log('coucou1') " +
 				//"onmouseout=console.log("+e+");>" +
 				">" + e.properties.nom_operation + "</div>" ;
