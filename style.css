@@ -54,7 +54,7 @@ h2{
 h3{
 	font-size:0.9em;
 	font-weight: bold;
-	color: #dfeced;
+	color: #ffffff;
 	padding:5px;
 	margin:0;
 }
@@ -69,7 +69,7 @@ mark:hover {
 }
 
 .presentation {
-	color: #114025;
+	color: #004D4D;
 	line-height: 1.1em;
 	padding-top:10px;
 }
@@ -87,15 +87,15 @@ mark:hover {
 .description {
     font-size: 1em;
     font-weight: bold;
-    color: #ffffff;
+    color: #004D4D;
 }
 
 .operation { 
-    color: #9C0C40;
+    color: #89043D;
 }
 
 .porteur { 
-    color: #006099;
+    color: #A13500;
 }
 	
 #sources {
@@ -106,10 +106,9 @@ mark:hover {
 .Tooltips {
 	font-size:1.1em;
 	line-height:1.1em;
-	padding:3 3px;
 	border:none;
 	font-weight: bold;	
-	margin: -35px 35px;
+	margin: -35px 60px;
 	white-space: normal;
 	text-align:left;
 	max-width:300px;
@@ -118,11 +117,11 @@ mark:hover {
 	}
 	
 .Tooltip_operation {
-	color:#00009d;
+	color:#63032C;
 	}
 
 .Tooltip_porteur {
-	color:#247BA0;
+	color:#A13500;
 	}
 	
 
@@ -146,7 +145,7 @@ mark:hover {
 
 #divInfos {
 	display: block;
-	color: #114025;
+	color: #004D4D;
 	}
 	
 #defaut {
@@ -154,13 +153,13 @@ mark:hover {
 	}
 	
 .onglets{
-	background-color: #114025;
-	color: #2FAC66;
+	background-color: #408686;
+	color: #ffffff;
 }
 
 
 .onglets:hover {
-	color: #207545;
+	color: #408686;
 	background-color: yellow;
 }
 
@@ -193,10 +192,11 @@ mark:hover {
 	border: 1px solid rgba(223,236,237,0.5);
 	vertical-align:middle;
 	padding: 8px;
+	width: 100%;
 }
 
 .divTableBody {
-	display: table-row-group;
+	width: 90%;
 }
 
 .chiffre{
@@ -206,7 +206,7 @@ mark:hover {
 }
 
 .liste{
-	color:#114025;
+	color:#004D4D;
 	cursor: pointer;
 	list-style:inside;
 	padding:4px 4px;
@@ -226,10 +226,9 @@ mark:hover {
 
 .liste:hover {
 	color:yellow;
-	background-color: #268A52;
+	background-color: #76A8A8;
 	border-radius:3px;
 }
-
 
 .tip {
 	color: #007282;
@@ -271,7 +270,7 @@ mark:hover {
 	font-weight: bold;
 	text-align: center;
 	vertical-align: middle;	
-	background-color: #207545;
+	background-color: #408686;
 	margin:25px;
 	padding: 10px;
 	border-radius: 4px;
@@ -287,7 +286,7 @@ mark:hover {
 	
 .bouton:hover, .bouton_reinitialiser:hover {
 	background-color: yellow;
-	color: #004e5f;
+	color: #408686;
 	border-radius: 4px;
 	}
 	

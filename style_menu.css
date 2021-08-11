@@ -41,17 +41,17 @@ max-height:15em;
 }
 /* background des liens menus */
 .menu li{
-background-color: #207545;
+background-color: #408686;
 }
 
 /* background des liens sous menus */
 .menu li li{
-background:#207545;
+background:#408686;
 }
 
 /* background des liens menus et sous menus au survol */
 .menu li:hover, .menu li li:hover{
-background:#e1ff2f;
+background:#76A8A8;
 }
 
 /* les a href */
@@ -70,5 +70,5 @@ color:#fff;
 text-transform:inherit;
 }
 .menu li:hover a, .menu li li:hover a{
-color:#006477;
+color:#004D4D;
 }

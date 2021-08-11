@@ -38,7 +38,7 @@
   top: 0;
   bottom: 0;
   height: 100%;
-  background-color: #268A52; }
+  background-color: #76A8A8; }
   .sidebar-left .sidebar-tabs {
     left: 0; }
   .sidebar-right .sidebar-tabs {
@@ -81,7 +81,7 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  background-color: #2FAC66;
+  background-color: #9DC1C1;
   overflow-x: hidden;
   overflow-y: auto; }
   .sidebar-left .sidebar-content {

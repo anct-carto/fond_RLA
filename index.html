@@ -31,10 +31,10 @@
 		 <!-- Boutons de menu -->
 		<div class="sidebar-tabs" id="barre-verticale">
             <ul role="tablist" >
-                <li><a role="tab" id="logo" title="Retour à l'accueil" class="onglets"><i style="vertical-align:middle;" class="fas fa-home"></i></a></li>
-					<div class="tip" id='tip1'>Accueil</div>
-				<li><a id="info" role="tab" title="infos" class="onglets"><i style="vertical-align:middle;" class="fa fa-question"></i></a></li>
-					<div class="tip" id='tip3'>En savoir plus</div>
+				<li><a id="info" role="tab" title="infos" class="onglets"><i style="vertical-align:middle;" class="fa fa-home"></i></a></li>
+					<div class="tip" id='tip3'>Accueil</div>
+				<li><a role="tab" id="logo" title="Retour à l'accueil" class="onglets"><i style="vertical-align:middle;" class="fas fa-search"></i></a></li>
+					<div class="tip" id='tip1'>Rechercher</div>
 			</ul>
         </div>
 
@@ -42,7 +42,7 @@
         <div class="sidebar-content">
             <div class="sidebar-pane" id="home">
                 
-				<h1>Carte interactive des fonds de restructuration des locaux d’activité 
+				<h1>Carte interactive du fond de restructuration des locaux d’activité 
 				<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 				
@@ -52,17 +52,11 @@
 					<span class="bouton_reinitialiser" onclick="initFiltres();" title="Réinitialiser les filtres">Voir toutes les opérations</span>
 					
 					<div class="divTableCell">
-					<h3 class="">Filtrer les opérations&nbsp;:</h3>
-					<ul id="menu_themes" class="menu">
-						<li><a id="selectionner_programme">Tous les programmes</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
-							<ul id="liste_programmes">		
-							</ul>
-						</li>	
-					</ul>
+					<h3 class="">Filtrer les opérations par porteur&nbsp;:</h3>
 					<ul id="menu_modalites" class="menu">
 						<li><a id="selectionner_porteur">Tous les porteurs</a><span><i class="fa fa-caret-down" style="font-size:1.2em;"></i></span>
 							<ul id="liste_porteurs">
-								<li onclick="TTporteur()"><a href='#'>Tous les porteurs</a></li>	
+								<li onclick="initFiltres()"><a href='#'>Tous les porteurs</a></li>	
 							</ul>
 						</li>
 					</ul>
@@ -74,14 +68,16 @@
 					
 					<div class="divTableCell"  >
 						<h3 class="">Rechercher une opération par son nom&nbsp;:</h3>
-						<input type="text" title="nom de l'opération" autocomplete="off" placeholder="Nom de l'opération" id ="searchField">
+						<input class="awesomplete" type="text" title="nom de l'opération" autocomplete="off" placeholder="Nom de l'opération" id ="searchField" list="liste_toutes_operations">
 					</div>
 					
 					<div class="divTableCell">
-		
-					<h3 class="">Liste des opérations &nbsp;:</h3>
-					<div class="description cooperation" id="liste_toutes_operations"></div>
+						<h3 class="">Liste des opérations &nbsp;:</h3>
+						<div class="description cooperation" id="liste_toutes_operations2"></div>
+						<div class="description cooperation" id="liste_toutes_operations"></div>
 					</div>
+					
+					
 					
 					
 				</div>
@@ -99,19 +95,31 @@
 								<div class="divTableRow description" id="statut_porteur"></div>
 						</div>
 						<div class="divTableCell">
-								<h3 class="divTableRow">Nom de la commune</h3>
-								<div class="divTableRow description" id="nom_com"></div>
-						</div>
-						<div class="divTableCell">
 								<h3 class="divTableRow">Adresse postale</h3>
 								<div class="divTableRow description" id="adresse"></div>
 						</div>
-						<div class="divTableCell">
+						<div class="divTableCell" id="internet_cell">
 								<h3 class="divTableRow">Site Internet</h3>
 								<div class="divTableRow description" id="internet"></div>
 						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Nombre d'opérations portées</h3>
+								<div class="divTableRow description" id="nb_operations"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Nombre de locaux</h3>
+								<div class="divTableRow description" id="nb_locaux_p"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Surface totale en m²</h3>
+								<div class="divTableRow description" id="tot_surf"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Montant total des subventions en €</h3>
+								<div class="divTableRow description" id="tot_subv"></div>
+						</div>
 					
-					
+						</br>
 						<h3 class="">Liste des opérations de ce porteur&nbsp;:</h3>
 						<div class="description cooperation" id="liste_operations"></div>
 						
@@ -127,18 +135,22 @@
 					
 					<div class="divTableBody">
 						<div class="divTableCell">
-								<h3 class="divTableRow">Nom de la commune</h3>
-								<div class="divTableRow description" id="nom_com"></div>
+								<h3 class="divTableRow">Porteur</h3>
+								<div class="divTableRow description" id="nom_porteur_op"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Adresse de l'opération</h3>
+								<div class="divTableRow description" id="adresse_op"></div>
 						</div>
 						
 						<div class="divTableCell">
-								<h3 class="divTableRow">périmètre d'intervention</h3>
+								<h3 class="divTableRow">Périmètre d'intervention</h3>
 								<div class="divTableRow description" id="perimetre_intervention"></div>
 						</div>
 						
 						<div class="divTableCell">
 								<h3 class="divTableRow">Nombre de locaux</h3>
-								<div class="divTableRow description" id="nb_locaux"></div>
+								<div class="divTableRow description" id="nb_locaux_op"></div>
 						</div>
 						
 						<div class="divTableCell">
@@ -147,8 +159,8 @@
 						</div>
 						
 						<div class="divTableCell">
-								<h3 class="divTableRow">Avancement</h3>
-								<div class="divTableRow description " id="avancement"></div>
+								<h3 class="divTableRow">Montant de l'opération en €</h3>
+								<div class="divTableRow description " id="montant_copil"></div>
 						</div>
 						
 						<div class="divTableCell">
@@ -197,17 +209,10 @@
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
 	
     <script src="src/leaflet-sidebar.js"></script>
-	<script src="src/leaflet-search.js"></script>
-	<script src="src/randomColor-master/randomColor.js"></script>
 	<script type="text/javascript"  src="https://unpkg.com/leaflet.vectorgrid@1.2.0"></script>
-	<script type="text/javascript" src="data/masque.js"></script> <!-- fond de plan -->
-	<script type="text/javascript" src="data/toutes_couches.js"></script> <!-- fond de carte EPCI+départements+régions -->
-	<script type="text/javascript" src="data/cercles_drom.js"></script> <!-- cercles outre mer -->
-	<script type="text/javascript" src="data/toponymes.js"></script> <!-- toponymes communes epci départements regions -->
-	<script type="text/javascript" src= "src/awesomplete.js"></script>
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.6.3/tabletop.min.js'></script>
-	
-	
+	<script type="text/javascript" src= "src/awesomplete_original.js"></script>
+	<script src='src/papaparse.min.js'></script>
+
     
 	<script>
 			
@@ -229,20 +234,9 @@
 		
 		//Variables globales
 		porteur_choisi = 'Tous les porteurs'
-		programme_choisi = 'Tous les programmes'
 		
 /* COULEURS - STYLES - LEGENDE */
 		
-		/*une couleur unique pour chaque territoire
-		var couleur;
-		function getColor() {
-			couleur = randomColor({ 
-				hue : 'orange',
-				luminosity: 'bright', //bright light dark
-				format: 'hex' // rgb rgba rgbArray hsl hsla hslArray hex
-				});
-			return couleur;
-		}*/
 		
 		//Définition des pictos
 		var LeafIcon = L.Icon.extend({
@@ -255,20 +249,13 @@
 			//popupAnchor:  [0, -30]
 		}
 		});
-		var operation_off_1 = new LeafIcon({iconUrl: 'img/picto_operation_off_1.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			operation_on_1 = new LeafIcon({iconUrl: 'img/picto_operation_on_1.png', iconSize: [18,18], iconAnchor:[9,9]}),
-			operation_off_2 = new LeafIcon({iconUrl: 'img/picto_operation_off_2.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			operation_on_2 = new LeafIcon({iconUrl: 'img/picto_operation_on_2.png', iconSize: [18,18], iconAnchor:[9,9]}),
-			operation_off_3 = new LeafIcon({iconUrl: 'img/picto_operation_off_3.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			operation_on_3 = new LeafIcon({iconUrl: 'img/picto_operation_on_3.png', iconSize: [18,18], iconAnchor:[9,9]});
-		
-		var picto_cible_1 = new LeafIcon({iconUrl: 'img/picto_operateur_active_1.png', iconSize: [20,20], iconAnchor:[10,10]}),
-			picto_cible_2 = new LeafIcon({iconUrl: 'img/picto_operateur_active_2.png', iconSize: [20,20], iconAnchor:[10,10]}),
-			picto_cible_3 = new LeafIcon({iconUrl: 'img/picto_operateur_active_3.png', iconSize: [20,20], iconAnchor:[10,10]});
+		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [14,14], iconAnchor:[7,7]}),
+			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [20,20], iconAnchor:[10,10]}),
+			operation_active = new LeafIcon({iconUrl: 'img/picto_operation_active.png', iconSize: [26,26], iconAnchor:[13,13]});
 			
-		var	porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [22,22], iconAnchor:[11,11]}),
-			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [22,22], iconAnchor:[11,11]}),
-			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [30,30], iconAnchor:[15,15]});
+		var	porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [34,34], iconAnchor:[17,17]}),
+			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [30,30], iconAnchor:[15,15]}),
+			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [38,38], iconAnchor:[18,18]});
 			
 		
 		
@@ -286,43 +273,9 @@
 		map.getPane('operations').style.zIndex = 545;
 		map.createPane('porteurs');
 		map.getPane('porteurs').style.zIndex = 520;
-		//map.createPane('geomCible2');
-		//map.getPane('geomCible2').style.zIndex = 530;
-		//map.createPane('geomCible');
-		//map.getPane('geomCible').style.zIndex = 540;
-		//map.createPane('lines');
-		//map.getPane('lines').style.zIndex = 550;
 		map.createPane('labels');
 		map.getPane('labels').style.zIndex = 560;
 		
-		
-		//Couches du fond de carte
-		//Cache = L.geoJSON(JS_masque, {color: "#185936", weight: 0, opacity: 1, fillOpacity: 1, pane: "fond"}).addTo(map);
-		//Cercles_drom = L.geoJSON(JS_drom, {color: "#ffffff", weight: 0.5, opacity: 0.2, fillOpacity: 0, pane: "cercles"}).addTo(map);
-		
-		Fond_Regions = L.geoJSON(JS_tout, {
-			filter: function(feature, layer) {return feature.properties.type=="region"},
-			style : {weight: 0, opacity: 1, fillOpacity: 1, fillColor:"#E3DAD1", pane: "fond"}
-			})
-			//.addTo(map);
-		
-		Contour_Regions = L.geoJSON(JS_tout, {
-			filter: function(feature, layer) {return feature.properties.type=="region"},
-			style : {color: "#ffffff", weight: 1.3, opacity: 0.5, fillOpacity: 0, pane: "contour"}
-			})
-			//.addTo(map);
-		
-		Departements = L.geoJSON(JS_tout, {
-			filter: function(feature, layer) {return feature.properties.type=="departement"},
-			style: {color: "#ffffff", weight: 0.5, opacity: 0.5, fillOpacity: 0, pane: "contour"}
-			})
-			//.addTo(map);
-			
-		Contour_Epci = L.geoJSON(JS_tout, {
-			filter: function(feature, layer) {return feature.properties.type=="epci"},
-			style : {color: "#ffffff", weight: 0.2, opacity: 0.4, fillOpacity: 0, pane: "contour"}
-			})
-			//.addTo(map);
 		
 		//Création des labels
 		var createLabelIcon = function(labelClass,labelText){
@@ -334,62 +287,22 @@
 		})
 		}
 		
-		//Label Regions
-		labelsReg = L.geoJSON(JS_toponymes, {
-				pointToLayer: function(feature, latlng) {
-					marker = L.marker(latlng,{icon:createLabelIcon("labelClassReg", feature.properties.libgeo), pane:'labels', interactive: false});
-					marker.properties = {};
-					marker.properties.nom = feature.properties.libgeo;
-					return marker;
-				},
-				filter : function(feature, layer) {
-					return feature.properties.layer == "region";
-				}		
-		})
-		//.addTo(map)
-		
-		//Label Departements
-		labelsDep = L.geoJSON(JS_toponymes, {
-				pointToLayer: function(feature, latlng) {
-					marker = L.marker(latlng,{icon:createLabelIcon("labelClassDep", feature.properties.libgeo),pane:'labels', interactive: false});
-					marker.properties = {};
-					marker.properties.nom = feature.properties.libgeo;
-					return marker;
-				},
-				filter : function(feature, layer) {
-					return feature.properties.layer == "departement";
-				}		
-		})
-		
-		//Label Epci
-		labelsEpci = L.geoJSON(JS_toponymes, {
-				pointToLayer: function(feature, latlng) {
-					marker = L.marker(latlng,{icon:createLabelIcon("labelClassEpci", feature.properties.libgeo),pane:'labels', interactive: false});
-					marker.properties = {};
-					marker.properties.nom = feature.properties.libgeo;
-					return marker;
-				},
-				filter : function(feature, layer) {
-					return feature.properties.layer == "epci";
-				}		
-		})
-		
-		//Ajout des données drive
+		//Ajout des données drive en utilisant papa.parse
 		//data_porteurs
-		var porteursSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1FFnqHxgOKn4MwJrkeqXopsHsrcHINQRaCAUPPgaUt5E/edit?usp=sharing'; // compte cgetcarto
+		const porteursSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?output=csv"; // compte cgetcarto
 		//data_opérations
-		var operationsSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1jOqEQP034yqL825yz0CmxU_yv0_t50GtK0zvL13X8b4/edit?usp=sharing'; // compte cgetcarto
-		
+		const operationsSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdccgiy0wUg4xYf6dsucHGPQkpKp4OVokjUt2pEBft22XtpoCZltjMe69nYEUbmLRtffe3Obhq4flY/pub?output=csv"; // compte cgetcarto
+
 		function init() {
-			a = Tabletop({ 
-				key: operationsSpreadsheetUrl,
-				callback: showInfo_operations,
-				simpleSheet: true
+			a = Papa.parse(porteursSpreadsheetUrl, {
+				download: true,
+				header: true,
+				complete: (results) => showInfo_porteurs(results.data)
 			});
-			b = Tabletop({ 
-				key: porteursSpreadsheetUrl,
-				callback: showInfo_porteurs,
-				simpleSheet: true
+			b = Papa.parse(operationsSpreadsheetUrl, {
+				download: true,
+				header: true,
+				complete: (results) => showInfo_operations(results.data)
 			});
 		}
 		
@@ -404,27 +317,28 @@
 		var listePorteurs = [];
 		
 		//Opérations : aller chercher les données et créer les markers
-		function showInfo_operations(data, tabletop) {
+		function showInfo_operations(data) {
 			for (var i in data){
 				
 				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_operation, pane:'operations'});
 				
 				marker.addTo(operations); 
 				
-				if (data[i].niveau_avancement == '2'){marker.setIcon(operation_off_2); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_2); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_2); });}
-				else if (data[i].niveau_avancement == '3'){marker.setIcon(operation_off_3); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_3); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_3); });}
-				else marker.setIcon(operation_off_1); marker.on('mouseover', function(e) {e.target.setIcon(operation_on_1); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off_1); });
+				if (data[i].niveau_avancement == '1'){marker.setIcon(operation_off); marker.on('mouseover', function(e) {e.target.setIcon(operation_on); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off); });}
 				
 				marker.properties = {};
 				marker.properties.lat = data[i].lat;
 				marker.properties.lng = data[i].lng;
 				marker.properties.id_operation = data[i].id_operation;
 				marker.properties.id_porteur = data[i].id_porteur;
+				marker.properties.nom_porteur = data[i].nom_porteur;
+				marker.properties.statut_porteur = data[i].statut_porteur;
 				marker.properties.nom_operation = data[i].nom_operation;
 				marker.properties.id_demande = data[i].id_demande;
-				marker.properties.nom_com = data[i].nom_com;
+				marker.properties.adresse_op = data[i].adresse;
+				marker.properties.nom_com_op = data[i].nom_com;
 				marker.properties.perimetre_intervention = data[i].perimetre_intervention;
-				marker.properties.nb_locaux = data[i].nb_locaux;
+				marker.properties.nb_locaux_op = data[i].nb_locaux;
 				marker.properties.surf = data[i].surf;
 				marker.properties.avancement = data[i].avancement;
 				marker.properties.livraison_prev = data[i].livraison_prev;
@@ -433,11 +347,10 @@
 				marker.properties.montant_copil = data[i].montant_copil;
 				marker.properties.date_copil = data[i].date_copil;
 				
-				
 				marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
 				marker.on('click', function(e) {
-					infosOperations(e.target);
-					markerCible(e.target);
+					infosOperations(e.target.properties.id_operation);
+					markerCible(e.target.properties.lat,e.target.properties.lng,e.target.options.pane );
 					});
 			
 			}
@@ -452,7 +365,7 @@
 		
 		
 		//Opérations : aller chercher les données et créer les markers
-		function showInfo_porteurs(data, tabletop) {
+		function showInfo_porteurs(data) {
 			for (var i in data){
 				
 				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_porteur, pane:'porteurs'});
@@ -464,23 +377,29 @@
 				
 				//Rempli le menu déroulant du filtre par porteur
 				document.getElementById("liste_porteurs").innerHTML +=
-						"<li onClick='filtre(programme_choisi, \""+data[i].id_porteur+"\"); porteur_choisi=\""+data[i].id_porteur+"\" ; document.getElementById(\"selectionner_porteur\").innerHTML = \""+data[i].nom_porteur+"\";'>"+
+						"<li onClick='if(markerCib) {map.removeLayer(markerCib);}; filtre(\""+data[i].id_porteur+"\"); porteur_choisi=\""+data[i].id_porteur+"\" ; document.getElementById(\"selectionner_porteur\").innerHTML = \""+data[i].nom_porteur+"\";'>"+
 						"<a href='#'>"+data[i].nom_porteur+"</a></li>";
 				
 				marker.properties = {};
 				marker.properties.id_porteur = data[i].id_porteur;
 				marker.properties.nom_porteur = data[i].nom_porteur;
+				marker.properties.lat = data[i].lat;
+				marker.properties.lng = data[i].lng;
 				marker.properties.statut_porteur = data[i].statut_porteur;
 				marker.properties.id_com = data[i].id_com;
 				marker.properties.id_postal = data[i].id_postal;
 				marker.properties.nom_com = data[i].nom_com;
 				marker.properties.adresse = data[i].adresse;
 				marker.properties.internet = data[i].internet;
+				marker.properties.nb_operations = data[i].nb_operations;
+				marker.properties.nb_locaux_p = data[i].nb_locaux;
+				marker.properties.tot_surf = data[i].tot_surf;
+				marker.properties.tot_subv = data[i].tot_subv;
 						
 				marker.bindTooltip(data[i].nom_porteur, {className: 'Tooltips Tooltip_porteur', direction: "center",  sticky:true});
 				marker.on('click', function(e) {
 					infosPorteurs(e.target);
-					//markerCible(e.target);
+					markerCible(e.target.properties.lat,e.target.properties.lng,e.target.options.pane);
 					});
 			
 			}
@@ -494,53 +413,58 @@
 		}
 		
 		window.addEventListener('DOMContentLoaded', init);	
-
-		//Remplir le menu déroulant des programmes
-		function creerListeProgrammes() {
-			//var listeProgrammes = [['pr0','Tous les programmes']['pr1','N00000003'],['pr2','N00000005'],['pr3','N00000006']];
-			var listeProgrammes = ['Tous les programmes','N00000003','N00000005','N00000006'];
-			for (var i = 0; i < listeProgrammes.length; i++) {
-				document.getElementById("liste_programmes").innerHTML +=
-					"<li onClick='filtre(\""+ listeProgrammes[i] +"\", porteur_choisi); programme_choisi = \""+ listeProgrammes[i] + "\" ; document.getElementById(\"selectionner_programme\").innerHTML = \""+listeProgrammes[i]+"\";' >"+
-					"<a href='#'>"+listeProgrammes[i]+"</a></li>";
-					//"<li>"+listeProgrammes[i]+"</li>";
-			}
-		}
-		creerListeProgrammes();
 		
 		
 /* FICHES OPERATIONS ET PORTEURS */
+
+		//Fonctions de formatage de nombres
+		function format1(nombre){ //2 chiffres après la virgule
+		  nombre=parseFloat(nombre).toFixed(2);
+		  return nombre;
+		}
+		function format2(nombre){ //séparateurs de milliers
+		  nombre=parseFloat(nombre).toFixed(0);
+		  nombre += '';
+		  var sep = '&nbsp;';
+		  var reg = /(\d+)(\d{3})/;
+		  while( reg.test( nombre)) {
+			nombre = nombre.replace( reg, '$1' +sep +'$2');
+		  }
+		  return nombre;
+		}
+		function format3(nombre){ // pas de chiffre après la virgule
+		  nombre=parseFloat(nombre).toFixed(0);
+		  return nombre;
+		}
+		function format4(nombre){ // valeur absolue
+		  nombre=parseFloat(nombre).toFixed(2);
+		  return Math.abs(nombre);
+		}
 		
 		//Action au clic sur un marker
 		function infosOperations(e) {
 			//ouverture de la sidebar
 			sidebar.open('home');
 			
-			//Modification de l'icone
-			//if(acv_select) {
-			//	if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_off);}
-			//	else {acv_select.setIcon(uncheckedIcon_off);}
-			//}
-			operation_select = e;
-			//if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_on);}
-			//else {acv_select.setIcon(uncheckedIcon_on);}
-			
-			//Remplissage de la popup
 			document.getElementById('fiche_operation').style.display = "block";
 			document.getElementById('divInfos').style.display = "none";
 			document.getElementById('defaut').style.display = "none";
 			document.getElementById('fiche_porteur').style.display = "none";
-			document.getElementById('nom_operation').innerHTML = operation_select.properties.nom_operation;
-			//document.getElementById('id_demande').innerHTML = operation_select.properties.id_demande;
-			document.getElementById('nom_com').innerHTML = operation_select.properties.nom_com;
-			document.getElementById('perimetre_intervention').innerHTML = operation_select.properties.perimetre_intervention;
-			document.getElementById('nb_locaux').innerHTML = operation_select.properties.nb_locaux;
-			document.getElementById('surf').innerHTML = operation_select.properties.surf;
-			document.getElementById('avancement').innerHTML = operation_select.properties.avancement;
-			document.getElementById('livraison_prev').innerHTML = operation_select.properties.livraison_prev;
 			
-			//if (acv_select.properties.fiche_projet=="oui") {document.getElementById('projet').innerHTML = "Projet de cœur de ville en cours : <br/><a href=\'fiches_projets/ficheprojet_"+acv_select.properties.id_acv+".pdf' target=\'_blank\' style=\'text-decoration:none; color:#ffc20e\'><strong>"+acv_select.properties.nom_projet+"</strong></a>";}
-			//else {document.getElementById('projet').innerHTML = "";}
+			operations.eachLayer(function(layer){
+				if(layer.properties.id_operation==e){
+					//Remplissage de la popup
+					document.getElementById('nom_operation').innerHTML = layer.properties.nom_operation;
+					document.getElementById('nom_porteur_op').innerHTML = layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") ";
+					document.getElementById('adresse_op').innerHTML = layer.properties.adresse_op+", "+layer.properties.nom_com_op;
+					document.getElementById('perimetre_intervention').innerHTML = layer.properties.perimetre_intervention;
+					document.getElementById('nb_locaux_op').innerHTML = layer.properties.nb_locaux_op;
+					document.getElementById('surf').innerHTML = format2(layer.properties.surf);
+					document.getElementById('montant_copil').innerHTML = format2(layer.properties.montant_copil);
+					document.getElementById('livraison_prev').innerHTML = layer.properties.livraison_prev;
+				}
+			});
+			
 		}	
 		
 		//Action au clic sur un marker
@@ -548,42 +472,40 @@
 			//ouverture de la sidebar
 			sidebar.open('home');
 			
-			//Modification de l'icone
-			//if(acv_select) {
-			//	if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_off);}
-			//	else {acv_select.setIcon(uncheckedIcon_off);}
-			//}
 			porteur_select = e;
-			//if (acv_select.properties.fiche_projet == "oui"){acv_select.setIcon(checkedIcon_on);}
-			//else {acv_select.setIcon(uncheckedIcon_on);}
-			
-			//Remplissage de la popup
+
 			document.getElementById('fiche_porteur').style.display = "block";
 			document.getElementById('fiche_operation').style.display = "none";
 			document.getElementById('divInfos').style.display = "none";
 			document.getElementById('defaut').style.display = "none";
+			
+			//Remplissage de la popup
 			document.getElementById('nom_porteur').innerHTML = porteur_select.properties.nom_porteur;
-			document.getElementById('nom_com').innerHTML = porteur_select.properties.nom_com;
-			document.getElementById('adresse').innerHTML = porteur_select.properties.adresse;
-			document.getElementById('internet').innerHTML = porteur_select.properties.internet;
+			document.getElementById('statut_porteur').innerHTML = porteur_select.properties.statut_porteur;
+			document.getElementById('adresse').innerHTML = porteur_select.properties.adresse+", "+porteur_select.properties.nom_com;
+			if(porteur_select.properties.internet == ""){document.getElementById('internet_cell').style.display = "none";}
+			else {document.getElementById('internet_cell').style.display = "block"; document.getElementById('internet').innerHTML = "<a href='"+porteur_select.properties.internet+"' class='description' target='_blank' >"+porteur_select.properties.internet+"</a>";}
+			document.getElementById('nb_operations').innerHTML = format2(porteur_select.properties.nb_operations);
+			document.getElementById('nb_locaux_p').innerHTML = format2(porteur_select.properties.nb_locaux_p);
+			document.getElementById('tot_surf').innerHTML = format2(porteur_select.properties.tot_surf);
+			document.getElementById('tot_subv').innerHTML = format2(porteur_select.properties.tot_subv);
+		
 			
 			//Liste des opérations de ce porteur
 				document.getElementById('liste_operations').innerHTML = "<div>";
 				
 				for (var i = 0; i < operations.getLayers().length; i++) {
 					if(porteur_select.properties.id_porteur == operations.getLayers()[i].properties.id_porteur){
-						document.getElementById("liste_operations").innerHTML += "<li class='liste' >" + operations.getLayers()[i].properties.nom_operation + "</li>" ;
-						//"<li class='liste'" +
-						//"onMouseover='geometrieCibleHover(returnCoords(\""+listeTerrCoop[i].id_territoire+"\"), \"xy\", \"territoire\", jointure(\""+listeTerrCoop[i].id_territoire+"\", \"coop-terr\", \"nom_terr\"));'" +
-						//"onMouseout='map.removeLayer(geomCibHover);'" +
-						//"onclick='showFiche(\""+listeTerrCoop[i].id_territoire+"\", \"territoire\"); geometrieCible(returnCoords(\""+listeTerrCoop[i].id_territoire+"\"), \"territoire\"); '>" +
-						//"" + operations.getLayers()[i].properties.nom_operation +"</li>" ;
+						document.getElementById("liste_operations").innerHTML += 
+						"<div class='liste' " +
+						"onclick='markerCible("+operations.getLayers()[i].properties.lat+","+operations.getLayers()[i].properties.lng+", operations); infosOperations(\""+operations.getLayers()[i].properties.id_operation+"\")'" +
+						"onmouseover='markerSelect("+operations.getLayers()[i].properties.lat+","+operations.getLayers()[i].properties.lng+");'" +
+						"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
+						">" + operations.getLayers()[i].properties.nom_operation + "</div>" ;
 					}
 				}
 				document.getElementById('liste_operations').innerHTML += "</div>";
-			
-			//if (acv_select.properties.fiche_projet=="oui") {document.getElementById('projet').innerHTML = "Projet de cœur de ville en cours : <br/><a href=\'fiches_projets/ficheprojet_"+acv_select.properties.id_acv+".pdf' target=\'_blank\' style=\'text-decoration:none; color:#ffc20e\'><strong>"+acv_select.properties.nom_projet+"</strong></a>";}
-			//else {document.getElementById('projet').innerHTML = "";}
+
 		}	
 		
 	
@@ -591,27 +513,28 @@
 	
 		//Une cible sur le marker sélectionné
 		var markerCib;
-		function markerCible(e) {
+		function markerCible(la,lo,pane) {
 			if(markerCib) {map.removeLayer(markerCib);}
-			markerCib = new L.marker(new L.latLng(e._latlng), {icon: picto_cible_1});
+			markerCib = new L.marker(new L.latLng([la, lo]));
+			if (pane == "porteurs") {markerCib.setIcon(porteur_active);}
+			else {markerCib.setIcon(operation_active);}
 			markerCib.setZIndexOffset(-50);
 			markerCib.addTo(map);
 		}
 		
 		//Sélection du marker depuis la liste
-		//var markerSelec;
-		//function markerSelec(la,lo) {
-			//if(markerSelec) {map.removeLayer(markerSelec);}
-			//markerSelec = new L.marker(new L.latLng(la, lo), {icon: operation_on_1});
-			//markerSelec.setZIndexOffset(-50);
-			//markerSelec.addTo(map);
-		//}
+		var markerSelec;
+		function markerSelect(la,lo) {
+			if(markerSelec) {map.removeLayer(markerSelec);}
+			markerSelec = new L.marker(new L.latLng([la, lo]), {icon: operation_on});
+			markerSelec.setZIndexOffset(-50);
+			markerSelec.addTo(map);
+		}
 		
 	
-		// Filtre les opérations en fonction du programme et du porteur choisis
-		function filtre(programme, porteur) {
+		// Filtre les opérations en fonction du porteur choisis
+		function filtre(porteur) {
 			
-			programme_choisi = programme;
 			porteur_choisi = porteur;
 			
 			document.getElementById("liste_toutes_operations").innerHTML = "";
@@ -620,79 +543,44 @@
 			operationsSelect.clearLayers();
 			porteursSelect.clearLayers();
 
-			if ( programme_choisi == 'Tous les programmes' ) {
-					if (porteur_choisi == 'Tous les porteurs') {
-						operations.eachLayer(function(layer){
-								writeList(layer);
-								layer.addTo(operationsSelect);
-							});
-						porteurs.eachLayer(function(layer){
-								layer.addTo(porteursSelect);
-							});
-						}
-					else {
-						operations.eachLayer(function(layer){
-							if (layer.properties.id_porteur == porteur_choisi) {
-								writeList(layer);
-								layer.addTo(operationsSelect);
-								}
-							});
-						porteurs.eachLayer(function(layer){
-							if (layer.properties.id_porteur == porteur_choisi) {	
-								layer.addTo(porteursSelect);
-							}	
-							});
-						}
-				}		
-			else if (porteur_choisi == 'Tous les porteurs') {
+			if (porteur_choisi == 'Tous les porteurs') {
 				operations.eachLayer(function(layer){
-						if (layer.properties.id_demande == programme_choisi) {
-							writeList(layer);
-							layer.addTo(operationsSelect);
-							}
+						writeList(layer);
+						layer.addTo(operationsSelect);
 					});
 				porteurs.eachLayer(function(layer){
-					layer.addTo(porteursSelect);
-				});
+						layer.addTo(porteursSelect);
+					});
 				}
 			else {
 				operations.eachLayer(function(layer){
-					if (layer.properties.id_demande == programme_choisi && layer.properties.id_porteur == porteur_choisi) {
+					if (layer.properties.id_porteur == porteur_choisi) {
 						writeList(layer);
 						layer.addTo(operationsSelect);
-					}
-				});
+						}
+					});
 				porteurs.eachLayer(function(layer){
 					if (layer.properties.id_porteur == porteur_choisi) {	
 						layer.addTo(porteursSelect);
 					}	
-				});
-			}
+					});
+				}
+
 		}
 	
-		
-		
-		
 		//Fonction d'écriture de la liste active des opérations
 		function writeList(e){
 			document.getElementById("liste_toutes_operations").innerHTML +=
 				"<div class='liste' " +
-				//"onclick='console.log("+e.properties.lat+")'" +
-				//"onmouseover=console.log('coucou1') " +
-				//"onmouseout=console.log("+e+");>" +
+				"onclick='markerCible("+e.properties.lat+","+e.properties.lng+", operations); infosOperations(\""+e.properties.id_operation+"\")'" +
+				"onmouseover='markerSelect("+e.properties.lat+","+e.properties.lng+");'" +
+				"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
 				">" + e.properties.nom_operation + "</div>" ;
 		}
-	
-		function initFiltres() {
-			filtre('Tous les programmes', porteur_choisi);
-			document.getElementById("selectionner_programme").innerHTML = "Tous les programmes";
-			filtre(programme_choisi, 'Tous les porteurs');
-			document.getElementById("selectionner_porteur").innerHTML = "Tous les porteurs";
-		}
 		
-		function TTporteur(){
+		function initFiltres(){
 			document.getElementById("selectionner_porteur").innerHTML = "Tous les porteurs";
-			filtre(programme_choisi,"Tous les porteurs");
+			filtre("Tous les porteurs");
 			porteur_choisi = "Tous les porteurs" ;
 		}
 		
@@ -715,7 +603,6 @@
 			document.getElementById("fiche_porteur").style.display = "none";
 
 		}
-		
 		
 		//Action au clic sur "retour"
 		var boutons_retour = document.getElementsByClassName("retour");
@@ -771,44 +658,9 @@
 			else if (zoom >= 10) {map.removeLayer(labelsDep);map.addLayer(labelsEpci); map.removeLayer(labelsReg);}
 		});*/
 
-/* BARRES DE RECHERCHE 	
-		
-		//Barre de recherche (en haut à droite)
-		var RechercheZoom = L.layerGroup([Territoires, labelsDep, labelsEpci, labelsReg]);
-		
-		var searchControl = new L.control.search({
-			layer: RechercheZoom,
-			initial: false,
-			position:'topright',
-			propertyName: 'nom',
-			collapsed: true,
-			marker: false,
-			//moveToLocation: function(latlng, title, map) {
-				//map.flyTo(latlng, 10);
-			//}
-		})
-		
-		var myIcon = L.icon({
-			iconUrl: 'img/picto_on.png',
-			iconAnchor: [20, 60]
-		});
-		
-		searchControl.on('search:locationfound', function(e) {
-			if(marker) {map.removeLayer(marker);}
-			marker = new L.Marker(e.latlng, {icon: myIcon, pane: "lines"}).addTo(map);
-			var adaptedZoom = 9;
-			if (e.layer.feature.properties.layer == "departement"){adaptedZoom = 9;}
-			else if (e.layer.feature.properties.layer == "epci"){adaptedZoom = 10;}
-			else if (e.layer.feature.properties.layer == "region"){adaptedZoom = 7;}
-			map.flyTo(e.latlng, adaptedZoom);
-		});
-		
-		map.addControl(searchControl);	
-		 */
+
 		
    </script>
-	
-	<!--<script type="text/javascript" src= "src/recherche.js"></script>-->
 	
 	
 </body>

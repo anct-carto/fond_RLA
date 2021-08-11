@@ -29,8 +29,8 @@ var _ = function (input, o) {
 	this.options = o = o || {};
 
 	configure(this, {
-		minChars: 2,
-		maxItems: 15,
+		minChars: 1,
+		maxItems: 10,
 		autoFirst: false,
 		data: _.DATA,
 		filter: _.FILTER_CONTAINS,
@@ -38,7 +38,8 @@ var _ = function (input, o) {
 		container: _.CONTAINER,
 		item: _.ITEM,
 		replace: _.REPLACE,
-		tabSelect: false
+		tabSelect: false,
+		listLabel: "Results List"
 	}, o);
 
 	this.index = -1;
@@ -51,11 +52,10 @@ var _ = function (input, o) {
 		hidden: "hidden",
         role: "listbox",
         id: "awesomplete_list_" + this.count,
-		style: "padding:0",
-		//inside: this.container
-		inside: document.getElementById('liste_toutes_operations2')
+		inside: this.container,
+		"aria-label": this.listLabel
 	});
-	
+
 	this.status = $.create("span", {
 		className: "visually-hidden",
 		role: "status",
@@ -70,7 +70,7 @@ var _ = function (input, o) {
 	this._events = {
 		input: {
 			"input": this.evaluate.bind(this),
-			//"blur": this.close.bind(this, { reason: "blur" }),
+			"blur": this.close.bind(this, { reason: "blur" }),
 			"keydown": function(evt) {
 				var c = evt.keyCode;
 
@@ -82,6 +82,7 @@ var _ = function (input, o) {
 						me.select(undefined, undefined, evt);
 					}
 					else if (c === 9 && me.selected && me.tabSelect) {
+						evt.preventDefault();
 						me.select(undefined, undefined, evt);
 					}
 					else if (c === 27) { // Esc
@@ -95,7 +96,7 @@ var _ = function (input, o) {
 			}
 		},
 		form: {
-			//"submit": this.close.bind(this, { reason: "submit" })
+			"submit": this.close.bind(this, { reason: "submit" })
 		},
 		ul: {
 			// Prevent the default mousedowm, which ensures the input is not blurred.
@@ -178,7 +179,7 @@ _.prototype = {
 		return this.isOpened;
 	},
 
-	/*close: function (o) {
+	close: function (o) {
 		if (!this.opened) {
 			return;
 		}
@@ -191,7 +192,7 @@ _.prototype = {
 		this.status.setAttribute("hidden", "");
 
 		$.fire(this.input, "awesomplete-close", o || {});
-	},*/
+	},
 
 	open: function () {
 		this.input.setAttribute("aria-expanded", "true");
@@ -289,12 +290,11 @@ _.prototype = {
 
 			if (allowed) {
 				this.replace(suggestion);
-				//this.close({ reason: "select" });
+				this.close({ reason: "select" });
 				$.fire(this.input, "awesomplete-selectcomplete", {
 					text: suggestion,
 					originalEvent: originalEvent
 				});
-				
 			}
 		}
 	},
@@ -328,19 +328,20 @@ _.prototype = {
 
 			if (this.ul.children.length === 0) {
 
-               // this.status.textContent = "No results found";
+                this.status.textContent = "No results found";
 
-				//this.close({ reason: "nomatches" });
+				this.close({ reason: "nomatches" });
 
 			} else {
 				this.open();
 
-               // this.status.textContent = this.ul.children.length + " results found";
+                this.status.textContent = this.ul.children.length + " results found";
 			}
 		}
 		else {
-			//this.close({ reason: "nomatches" });
-               // this.status.textContent = "No results found";
+			this.close({ reason: "nomatches" });
+
+                this.status.textContent = "No results found";
 		}
 	}
 };
@@ -372,24 +373,15 @@ _.CONTAINER = function (input) {
 	});
 }
 
-//Fonction modifiée pour la carte interactive des coopérations
 _.ITEM = function (text, input, item_id) {
-	console.log('coucou');
-	/*document.getElementById("liste_toutes_operations").innerHTML = "";
 	var html = input.trim() === "" ? text : text.replace(RegExp($.regExpEscape(input.trim()), "gi"), "<mark>$&</mark>");
-	
 	return $.create("li", {
-		innerHTML: "<li class='liste'" +
-				"onclick='map.flyToBounds(returnCoordsCoop(\""+text.value+"\"), {paddingTopLeft:[300,0]}); showFiche(\"" +text.value+"\", \"cooperation\"); drawLines(\""+text.value+"\", \"heavy\"); geometrieCible(returnCoordsCoop(\""+text.value+"\"), \"cooperation\"); '" +
-				"onmouseover='geometrieCibleHover(returnCoordsCoop(\""+text.value+"\"), \"xy\", \"cooperation\")'" +
-				"onmouseout='polylineCoopThin.clearLayers(); map.removeLayer(geomCibHover);'>" +
-				"" + html + "</li>" ,
+		innerHTML: html,
 		"role": "option",
 		"aria-selected": "false",
-		"id": "awesomplete_list_" + this.count + "_item_" + item_id,
-		"style": "list-style:none"
-	});*/
-};				
+		"id": "awesomplete_list_" + this.count + "_item_" + item_id
+	});
+};
 
 _.REPLACE = function (text) {
 	this.input.value = text.value;
