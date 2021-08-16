@@ -83,11 +83,11 @@ h3{
 }
 
 .operation { 
-    color: #89043D;
+    color: #004d4d;
 }
 
 .porteur { 
-    color: #A13500;
+    color: #63032c;
 }
 	
 #sources {
@@ -109,11 +109,11 @@ h3{
 	}
 	
 .Tooltip_operation {
-	color:#63032C;
+	color:#004d4d;
 	}
 
 .Tooltip_porteur {
-	color:#A13500;
+	color:#63032c;
 	}
 	
 
@@ -184,11 +184,11 @@ h3{
 	border: 1px solid rgba(223,236,237,0.5);
 	vertical-align:middle;
 	padding: 8px;
-	width: 100%;
+	width: 97%;
 }
 
 .divTableBody {
-	width: 90%;
+	width: 95%;
 }
 
 .chiffre{
@@ -302,26 +302,4 @@ h3{
 	color:rgba(156,133,109,0.95);
 }
 	
-.labelClassReg {
-	padding: 3px;
-	line-height:12px;	
-	font-size:1em;
-	font-weight: bold;
-}
-
-.labelClassDep {
-	padding: 3px;
-	line-height:10px;	
-	font-size:1em;
-	font-weight: bold;
-	text-align:center;
-}
-
-.labelClassEpci {
-	padding: 3px;
-	line-height:9px;	
-	font-size:0.9em;
-	font-weight: bold;
-	max-width:500px;
-}
 

@@ -45,6 +45,34 @@
 				<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 				
+				<!-- Page d'infos -->
+				<div class="divTable" id="divInfos">	
+						
+					<div>
+						<p>Bienvenue sur la carte interactive des ......  proposée par l’Agence nationale de la cohésion des territoires.</p>
+						<p>Cette carte vous permet de <strong>visualiser <span id="operations_carte"></span> opérations</strong>, ainsi que leurs <strong>porteurs.</strong></p>
+						
+						<div>
+							<div style=""><img src="img/picto_operation_off.png" alt="picto_operation" style="width:22px; padding:6px; vertical-align: middle;"/>Opération</div>
+							<div style=""><img src="img/picto_porteur_off.png" alt="picto_porteur" style="width:35px; vertical-align: middle;"/>Porteur</div>
+						</div>
+					</div>
+					
+					<div class="button_container">
+						<div class="bouton" onclick="retourAcceuil();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
+					</div>
+					
+					<div id="sources" style="width:100%;">
+						<p><i>Sources des données&nbsp;: <a href="https://agence-cohesion-territoires.gouv.fr/" class="hyperlien" target="_blank">ANCT</a>, Direction générale déléguée à l'appui opérationnel et stratégique • Réalisation&nbsp;: ANCT pôle ADT, <a href="https://cartotheque.anct.gouv.fr/cartes" class="hyperlien" target="_blank">service cartographie</a></i></p>
+						
+						<div>
+							<img src="img/logo_anct.png" alt="logo anct" style="width:60%; padding:3px; "/>
+							<img src="img/logo_france_relance.png" alt="logo france relance" style="width:25%; padding:3px; "/>
+						</div>
+					</div>
+				
+				</div>	
+				
 				<!-- Page d'accueil -->
 				<div class="presentation" id="defaut">
 					
@@ -60,9 +88,7 @@
 						</li>
 					</ul>
 					
-					
-	
-					
+
 					</div>
 					
 					<div class="divTableCell"  >
@@ -159,7 +185,7 @@
 						
 						<div class="divTableCell">
 								<h3 class="divTableRow">Montant de l'opération en €</h3>
-								<div class="divTableRow description " id="montant_copil"></div>
+								<div class="divTableRow description " id="montant_demande"></div>
 						</div>
 						
 						<div class="divTableCell">
@@ -170,30 +196,6 @@
 						<div class="retour"><img src='img/fleche.png' style='vertical-align:middle; width:20px; padding:0px 15px;'  />Retour</div>
 					</div>	
 				</div>
-				
-				
-				<!-- Page d'infos -->
-				<div class="divTable" id="divInfos">	
-						
-					<div>
-						<p>Bienvenue sur la carte interactive des <span id="infos" style="cursor:pointer;" onmouseover="document.getElementById('def').style.display = 'block'" onmouseout="document.getElementById('def').style.display = 'none'" >......  proposée par l’Agence nationale de la cohésion des territoires.</p>
-						<p>Cette carte vous permet de <strong>visualiser XXX opérations</strong>, ainsi que leur <strong>porteur.</strong></p>
-					</div>
-					
-					<div class="button_container">
-						<div class="bouton" onclick="retourAcceuil();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
-					</div>
-					
-					<div id="sources" style="width:100%;">
-						<p><i>Sources des données&nbsp;: <a href="https://agence-cohesion-territoires.gouv.fr/" class="hyperlien" target="_blank">ANCT</a>, Direction générale déléguée à l'appui opérationnel et stratégique • Réalisation&nbsp;: ANCT pôle ADT, <a href="https://cartotheque.anct.gouv.fr/cartes" class="hyperlien" target="_blank">service cartographie</a></i></p>
-						
-						<div>
-							<img src="img/logo_anct.png" alt="logo anct" style="width:60%; padding:3px; "/>
-							<img src="img/logo_france_relance.png" alt="logo france relance" style="width:25%; padding:3px; "/>
-						</div>
-					</div>
-				
-				</div>	
 					
             </div>
 			
@@ -238,59 +240,32 @@
 		
 		
 		//Définition des pictos
-		var LeafIcon = L.Icon.extend({
-		options: {
-			//shadowUrl: 'img/shadow.png',
-			//shadowSize:   [23, 45],
-			//shadowAnchor: [0, 0],
-			//iconSize:     [25, 25],
-			//iconAnchor:   [0, 0],
-			//popupAnchor:  [0, -30]
-		}
-		});
+		var LeafIcon = L.Icon.extend({options: {}});
+		
 		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [20,20], iconAnchor:[10,10]}),
 			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [26,26], iconAnchor:[13,13]}),
 			operation_active = new LeafIcon({iconUrl: 'img/picto_operation_active.png', iconSize: [36,36], iconAnchor:[18,18]});
 			
-		var	porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [42,42], iconAnchor:[21,21]}),
-			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [48,48], iconAnchor:[24,24]}),
-			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [56,56], iconAnchor:[28,28]});
+		var	porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [48,48], iconAnchor:[24,24]}),
+			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [54,54], iconAnchor:[27,27]}),
+			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [60,60], iconAnchor:[30,30]});
 			
-		
 		
 		
 /* CREATION DES COUCHES */		
 		
 		//Niveaux d'affichage des couches
-		map.createPane('fond');
-		map.getPane('fond').style.zIndex = 500;
-		map.createPane('contour');
-		map.getPane('contour').style.zIndex = 500;
-		map.createPane('cercles');
-		map.getPane('cercles').style.zIndex = 510;
 		map.createPane('operations');
 		map.getPane('operations').style.zIndex = 545;
 		map.createPane('porteurs');
 		map.getPane('porteurs').style.zIndex = 520;
-		map.createPane('labels');
-		map.getPane('labels').style.zIndex = 560;
-		
-		
-		//Création des labels
-		var createLabelIcon = function(labelClass,labelText){
-		return L.divIcon({ 
-		className:  labelClass,
-		iconSize: null,	
-		iconAnchor: [40,15],			
-		html: '<div class="label"><div class="'+labelClass+'">'+labelText+'</div></div>'
-		})
-		}
 		
 		//Ajout des données drive en utilisant papa.parse
+		//Accès depuis le compte Carto https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pubhtml
 		//data_porteurs
-		const porteursSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?output=csv"; // compte cgetcarto
+		const porteursSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?gid=0&single=true&output=csv"; 
 		//data_opérations
-		const operationsSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdccgiy0wUg4xYf6dsucHGPQkpKp4OVokjUt2pEBft22XtpoCZltjMe69nYEUbmLRtffe3Obhq4flY/pub?output=csv"; // compte cgetcarto
+		const operationsSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?gid=573172456&single=true&output=csv"; 
 
 		function init() {
 			a = Papa.parse(porteursSpreadsheetUrl, {
@@ -364,6 +339,7 @@
 		operations.eachLayer(function(layer){
 			layer.addTo(operationsSelect);
 			});
+			document.getElementById("operations_carte").innerHTML = operationsSelect.getLayers().length;
 		}
 		
 
@@ -456,7 +432,7 @@
 					document.getElementById('perimetre_intervention').innerHTML = layer.properties.perimetre_intervention;
 					document.getElementById('nb_locaux_op').innerHTML = layer.properties.nb_locaux_op;
 					document.getElementById('surf').innerHTML = format2(layer.properties.surf);
-					document.getElementById('montant_copil').innerHTML = format2(layer.properties.montant_copil);
+					document.getElementById('montant_demande').innerHTML = format2(layer.properties.montant_demande);
 					document.getElementById('livraison_prev').innerHTML = layer.properties.livraison_prev;
 				}
 			});
