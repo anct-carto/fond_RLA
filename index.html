@@ -144,9 +144,10 @@
 								<div class="divTableRow description" id="tot_subv"></div>
 						</div>
 					
-						</br>
+						<div class="divTableCell">
 						<h3 class="">Liste des opérations de ce porteur&nbsp;:</h3>
 						<div class="description cooperation" id="liste_operations"></div>
+						</div>
 						
 						<div class="retour"><img src='img/fleche.png' style='vertical-align:middle; width:20px; padding:0px 15px;'  />Retour</div>
 					</div>	
@@ -427,7 +428,8 @@
 				if(layer.properties.id_operation==e){
 					//Remplissage de la popup
 					document.getElementById('nom_operation').innerHTML = layer.properties.nom_operation;
-					document.getElementById('nom_porteur_op').innerHTML = layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") ";
+					//document.getElementById('nom_porteur_op').innerHTML = layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") ";
+					document.getElementById('nom_porteur_op').innerHTML ="<a onclick='' class='description'>"+layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") </a>";
 					document.getElementById('adresse_op').innerHTML = layer.properties.adresse_op+", "+layer.properties.nom_com_op;
 					document.getElementById('perimetre_intervention').innerHTML = layer.properties.perimetre_intervention;
 					document.getElementById('nb_locaux_op').innerHTML = layer.properties.nb_locaux_op;
@@ -565,7 +567,10 @@
 
 		}
 		
+		//action au clic sur le nom du porteur depuis la fiche
+		function fichePorteur() {
 		
+		}
 	
 		//Fonction d'écriture de la liste active des opérations
 		function writeList(e){
