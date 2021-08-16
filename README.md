@@ -2,7 +2,7 @@
 En cours de développement
 	
 Lien d'accès à la carte interactive :	
-https://anct-carto.github.io/fonds_RLA/
+https://anct-carto.github.io/fond_RLA/
 
 Les cartes sont réalisées par le service cartographie de l'ANCT :
 https://cartotheque.anct.gouv.fr/cartes
