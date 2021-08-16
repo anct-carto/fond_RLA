@@ -59,7 +59,7 @@
 					</div>
 					
 					<div class="button_container">
-						<div class="bouton" onclick="retourAcceuil();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
+						<div class="bouton" onclick="retourAcceuil();initFiltres();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
 					</div>
 					
 					<div id="sources" style="width:100%;">
@@ -262,11 +262,11 @@
 		map.getPane('porteurs').style.zIndex = 520;
 		
 		//Ajout des données drive en utilisant papa.parse
-		//Accès depuis le compte Carto https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pubhtml
+		//Accès depuis le compte Carto https://docs.google.com/spreadsheets/d/e/2PACX-1vTdccgiy0wUg4xYf6dsucHGPQkpKp4OVokjUt2pEBft22XtpoCZltjMe69nYEUbmLRtffe3Obhq4flY/pubhtml
 		//data_porteurs
-		const porteursSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?gid=0&single=true&output=csv"; 
+		const porteursSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdccgiy0wUg4xYf6dsucHGPQkpKp4OVokjUt2pEBft22XtpoCZltjMe69nYEUbmLRtffe3Obhq4flY/pub?gid=1819941011&single=true&output=csv"; 
 		//data_opérations
-		const operationsSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBtZJ1OEb9EjMCDryYn9iZ1UdGKreyKY9LB0VJ7WX3-XciY3Veb-MtyZitR6XdTIkFqiCaBrooHuAc/pub?gid=573172456&single=true&output=csv"; 
+		const operationsSpreadsheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTdccgiy0wUg4xYf6dsucHGPQkpKp4OVokjUt2pEBft22XtpoCZltjMe69nYEUbmLRtffe3Obhq4flY/pub?gid=0&single=true&output=csv"; 
 
 		function init() {
 			a = Papa.parse(porteursSpreadsheetUrl, {
