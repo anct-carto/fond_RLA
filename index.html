@@ -16,7 +16,6 @@
 	<link href="https://fonts.googleapis.com/css?family=Asap:400,400i,500,500i,600,600i,700,700i|Crimson+Text:400,400i,600,600i,700,700i" rel="stylesheet">
 	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" href="style_menu.css" />
-	<link rel="stylesheet" href="src/awesomeplete.css" />
 	
 	
 </head>
@@ -68,7 +67,7 @@
 					
 					<div class="divTableCell"  >
 						<h3 class="">Rechercher une opération par son nom&nbsp;:</h3>
-						<input class="awesomplete" type="text" title="nom de l'opération" autocomplete="off" placeholder="Nom de l'opération" id ="searchField" list="liste_toutes_operations">
+						<input type="text" title="nom de l'opération" autocomplete="off" placeholder="Nom de l'opération" id ="searchField">
 					</div>
 					
 					<div class="divTableCell">
@@ -210,7 +209,7 @@
 	
     <script src="src/leaflet-sidebar.js"></script>
 	<script type="text/javascript"  src="https://unpkg.com/leaflet.vectorgrid@1.2.0"></script>
-	<script type="text/javascript" src= "src/awesomplete_original.js"></script>
+	<script type="text/javascript" src= "src/awesomplete.js"></script>
 	<script src='src/papaparse.min.js'></script>
 
     
@@ -249,13 +248,13 @@
 			//popupAnchor:  [0, -30]
 		}
 		});
-		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [14,14], iconAnchor:[7,7]}),
-			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [20,20], iconAnchor:[10,10]}),
-			operation_active = new LeafIcon({iconUrl: 'img/picto_operation_active.png', iconSize: [26,26], iconAnchor:[13,13]});
+		var operation_off = new LeafIcon({iconUrl: 'img/picto_operation_off.png', iconSize: [20,20], iconAnchor:[10,10]}),
+			operation_on = new LeafIcon({iconUrl: 'img/picto_operation_on.png', iconSize: [26,26], iconAnchor:[13,13]}),
+			operation_active = new LeafIcon({iconUrl: 'img/picto_operation_active.png', iconSize: [36,36], iconAnchor:[18,18]});
 			
-		var	porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [34,34], iconAnchor:[17,17]}),
-			porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [30,30], iconAnchor:[15,15]}),
-			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [38,38], iconAnchor:[18,18]});
+		var	porteur_off = new LeafIcon({iconUrl: 'img/picto_porteur_off.png', iconSize: [42,42], iconAnchor:[21,21]}),
+			porteur_on = new LeafIcon({iconUrl: 'img/picto_porteur_on.png', iconSize: [48,48], iconAnchor:[24,24]}),
+			porteur_active = new LeafIcon({iconUrl: 'img/picto_porteur_active.png', iconSize: [56,56], iconAnchor:[28,28]});
 			
 		
 		
@@ -320,11 +319,13 @@
 		function showInfo_operations(data) {
 			for (var i in data){
 				
-				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_operation, pane:'operations'});
-				
-				marker.addTo(operations); 
-				
-				if (data[i].niveau_avancement == '1'){marker.setIcon(operation_off); marker.on('mouseover', function(e) {e.target.setIcon(operation_on); }); marker.on('mouseout', function(e) {e.target.setIcon(operation_off); });}
+				if (data[i].niveau_avancement == '1'){
+					marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_operation, pane:'operations'});
+					marker.addTo(operations); 
+					marker.setIcon(operation_off); 
+					marker.on('mouseover', function(e) {e.target.setIcon(operation_on); }); 
+					marker.on('mouseout', function(e) {e.target.setIcon(operation_off); });
+				}
 				
 				marker.properties = {};
 				marker.properties.lat = data[i].lat;
@@ -511,7 +512,7 @@
 	
 /* ACTIONS */
 	
-		//Une cible sur le marker sélectionné
+		//Activer le marker
 		var markerCib;
 		function markerCible(la,lo,pane) {
 			if(markerCib) {map.removeLayer(markerCib);}
@@ -522,7 +523,7 @@
 			markerCib.addTo(map);
 		}
 		
-		//Sélection du marker depuis la liste
+		//Sélection du marker onhover depuis le panneau latéral
 		var markerSelec;
 		function markerSelect(la,lo) {
 			if(markerSelec) {map.removeLayer(markerSelec);}
@@ -567,6 +568,8 @@
 				}
 
 		}
+		
+		
 	
 		//Fonction d'écriture de la liste active des opérations
 		function writeList(e){
@@ -650,18 +653,56 @@
 			document.getElementById('tip3').style.display = 'none'
 		});
 		
-		/*Affichage des labels suivant le zoom
-		map.on('zoomend', function() {
-			var zoom = map.getZoom();
-			if (zoom < 8) {map.removeLayer(labelsDep); map.removeLayer(labelsEpci); map.addLayer(labelsReg);}
-			else if (zoom >= 8 && zoom < 10) { map.addLayer(labelsDep); map.removeLayer(labelsEpci); map.removeLayer(labelsReg);}
-			else if (zoom >= 10) {map.removeLayer(labelsDep);map.addLayer(labelsEpci); map.removeLayer(labelsReg);}
-		});*/
+
+
+/* OUTIL D'AUTOCOMPLETION */
+	
+	var listOperations = [];
+	var searchField = document.getElementById('searchField');
+	
+	//réinitialiser la liste des possibilités de recherche par nom lorsque les filtres sont appliqués
+	document.getElementById("searchField").addEventListener("click", function(event){
+		reinitlistOperations();
+	});
+	
+	function reinitlistOperations() {
+		listOperations = [];
+		operations.eachLayer(function(layer){
+			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
+		});	
+		awesomplete.list = listOperations;
+	}
+	
+	// liste de recherche par nom
+	operations.eachLayer(function(layer){
+			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
+			console.log(listOperations);
+		});	
+	
+	// outil d'autocompletion
+	var awesomplete = new Awesomplete(searchField,{ 
+		  minChars: 1,
+		  list: listOperations,
+		  replace: function(suggestion) {
+			this.input.value = suggestion.label;
+			}
+		});
+		
+	//Retourne les coordonnées à partir d'un identifiant d'opération
+		var coords;
+		function returnCoords(e) {
+			operations.eachLayer(function(layer){
+				if (layer.properties.id_operation == e) {
+					coords = layer._latlngs;
+					}
+			});
+			console.log(coords);
+			return coords;
+		}
 
 
 		
    </script>
-	
 	
 </body>
 

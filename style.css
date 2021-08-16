@@ -59,14 +59,6 @@ h3{
 	margin:0;
 }
 
-mark {
-	color:#af4d00;
-}
-
-mark:hover {
-	color:yellow;
-	background-color:red;
-}
 
 .presentation {
 	color: #004D4D;
@@ -211,6 +203,7 @@ mark:hover {
 	list-style:inside;
 	padding:4px 4px;
 	line-height:1.3em;
+	list-style: none;
 }
 
 #searchField{
