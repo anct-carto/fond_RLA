@@ -310,7 +310,6 @@
 		var porteursSelect = new L.layerGroup();
 		var operations = new L.layerGroup();
 		var operationsSelect = new L.layerGroup();
-		porteurs.addTo(map);
 		operationsSelect.addTo(map);
 		porteursSelect.addTo(map);
 		var listePorteurs = [];
@@ -325,35 +324,38 @@
 					marker.setIcon(operation_off); 
 					marker.on('mouseover', function(e) {e.target.setIcon(operation_on); }); 
 					marker.on('mouseout', function(e) {e.target.setIcon(operation_off); });
+				
+					marker.properties = {};
+					marker.properties.lat = data[i].lat;
+					marker.properties.lng = data[i].lng;
+					marker.properties.id_operation = data[i].id_operation;
+					marker.properties.id_porteur = data[i].id_porteur;
+					marker.properties.nom_porteur = data[i].nom_porteur;
+					marker.properties.statut_porteur = data[i].statut_porteur;
+					marker.properties.nom_operation = data[i].nom_operation;
+					marker.properties.id_demande = data[i].id_demande;
+					marker.properties.adresse_op = data[i].adresse;
+					marker.properties.nom_com_op = data[i].nom_com;
+					marker.properties.perimetre_intervention = data[i].perimetre_intervention;
+					marker.properties.nb_locaux_op = data[i].nb_locaux;
+					marker.properties.surf = data[i].surf;
+					marker.properties.avancement = data[i].avancement;
+					marker.properties.livraison_prev = data[i].livraison_prev;
+					marker.properties.livraison_reel = data[i].livraison_reel;
+					marker.properties.montant_demande = data[i].montant_demande;
+					marker.properties.montant_copil = data[i].montant_copil;
+					marker.properties.date_copil = data[i].date_copil;
+					
+					marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
+					marker.on('click', function(e) {
+						infosOperations(e.target.properties.id_operation);
+						markerCible(e.target.properties.id_operation);
+						});
+					
+					//écire la liste des porteurs qui vont être représentés sur la carte (ceux qui ont des opérations en cours)
+					listePorteurs.push(marker.properties.id_porteur);
+						
 				}
-				
-				marker.properties = {};
-				marker.properties.lat = data[i].lat;
-				marker.properties.lng = data[i].lng;
-				marker.properties.id_operation = data[i].id_operation;
-				marker.properties.id_porteur = data[i].id_porteur;
-				marker.properties.nom_porteur = data[i].nom_porteur;
-				marker.properties.statut_porteur = data[i].statut_porteur;
-				marker.properties.nom_operation = data[i].nom_operation;
-				marker.properties.id_demande = data[i].id_demande;
-				marker.properties.adresse_op = data[i].adresse;
-				marker.properties.nom_com_op = data[i].nom_com;
-				marker.properties.perimetre_intervention = data[i].perimetre_intervention;
-				marker.properties.nb_locaux_op = data[i].nb_locaux;
-				marker.properties.surf = data[i].surf;
-				marker.properties.avancement = data[i].avancement;
-				marker.properties.livraison_prev = data[i].livraison_prev;
-				marker.properties.livraison_reel = data[i].livraison_reel;
-				marker.properties.montant_demande = data[i].montant_demande;
-				marker.properties.montant_copil = data[i].montant_copil;
-				marker.properties.date_copil = data[i].date_copil;
-				
-				marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
-				marker.on('click', function(e) {
-					infosOperations(e.target.properties.id_operation);
-					markerCible(e.target.properties.lat,e.target.properties.lng,e.target.options.pane );
-					});
-			
 			}
 			showPictosOperations();
 		}
@@ -364,45 +366,50 @@
 			});
 		}
 		
-		
+
 		//Opérations : aller chercher les données et créer les markers
 		function showInfo_porteurs(data) {
 			for (var i in data){
 				
-				marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_porteur, pane:'porteurs'});
+				listePorteursSansDoublons = Array.from(new Set(listePorteurs));
 				
-				marker.addTo(porteurs); 
-				marker.setIcon(porteur_off);
-				marker.on('mouseover', function(e) {e.target.setIcon(porteur_on);}); 
-				marker.on('mouseout', function(e) {e.target.setIcon(porteur_off);});
-				
-				//Rempli le menu déroulant du filtre par porteur
-				document.getElementById("liste_porteurs").innerHTML +=
-						"<li onClick='if(markerCib) {map.removeLayer(markerCib);}; filtre(\""+data[i].id_porteur+"\"); porteur_choisi=\""+data[i].id_porteur+"\" ; document.getElementById(\"selectionner_porteur\").innerHTML = \""+data[i].nom_porteur+"\";'>"+
-						"<a href='#'>"+data[i].nom_porteur+"</a></li>";
-				
-				marker.properties = {};
-				marker.properties.id_porteur = data[i].id_porteur;
-				marker.properties.nom_porteur = data[i].nom_porteur;
-				marker.properties.lat = data[i].lat;
-				marker.properties.lng = data[i].lng;
-				marker.properties.statut_porteur = data[i].statut_porteur;
-				marker.properties.id_com = data[i].id_com;
-				marker.properties.id_postal = data[i].id_postal;
-				marker.properties.nom_com = data[i].nom_com;
-				marker.properties.adresse = data[i].adresse;
-				marker.properties.internet = data[i].internet;
-				marker.properties.nb_operations = data[i].nb_operations;
-				marker.properties.nb_locaux_p = data[i].nb_locaux;
-				marker.properties.tot_surf = data[i].tot_surf;
-				marker.properties.tot_subv = data[i].tot_subv;
+				for (var j = 0; j < listePorteursSansDoublons.length; j++) {
+					if(data[i].id_porteur==listePorteursSansDoublons[j]){
+						marker = new L.marker([data[i].lat, data[i].lng], {title: data[i].nom_porteur, pane:'porteurs'});
 						
-				marker.bindTooltip(data[i].nom_porteur, {className: 'Tooltips Tooltip_porteur', direction: "center",  sticky:true});
-				marker.on('click', function(e) {
-					infosPorteurs(e.target);
-					markerCible(e.target.properties.lat,e.target.properties.lng,e.target.options.pane);
-					});
-			
+						marker.addTo(porteurs); 
+						marker.setIcon(porteur_off);
+						marker.on('mouseover', function(e) {e.target.setIcon(porteur_on);}); 
+						marker.on('mouseout', function(e) {e.target.setIcon(porteur_off);});
+						
+						//Rempli le menu déroulant du filtre par porteur
+						document.getElementById("liste_porteurs").innerHTML +=
+								"<li onClick='if(markerCib) {map.removeLayer(markerCib);}; filtre(\""+data[i].id_porteur+"\"); porteur_choisi=\""+data[i].id_porteur+"\" ; document.getElementById(\"selectionner_porteur\").innerHTML = \""+data[i].nom_porteur+"\";'>"+
+								"<a href='#'>"+data[i].nom_porteur+"</a></li>";
+						
+						marker.properties = {};
+						marker.properties.id_porteur = data[i].id_porteur;
+						marker.properties.nom_porteur = data[i].nom_porteur;
+						marker.properties.lat = data[i].lat;
+						marker.properties.lng = data[i].lng;
+						marker.properties.statut_porteur = data[i].statut_porteur;
+						marker.properties.id_com = data[i].id_com;
+						marker.properties.id_postal = data[i].id_postal;
+						marker.properties.nom_com = data[i].nom_com;
+						marker.properties.adresse = data[i].adresse;
+						marker.properties.internet = data[i].internet;
+						marker.properties.nb_operations = data[i].nb_operations;
+						marker.properties.nb_locaux_p = data[i].nb_locaux;
+						marker.properties.tot_surf = data[i].tot_surf;
+						marker.properties.tot_subv = data[i].tot_subv;
+								
+						marker.bindTooltip(data[i].nom_porteur, {className: 'Tooltips Tooltip_porteur', direction: "center",  sticky:true});
+						marker.on('click', function(e) {
+							infosPorteurs(e.target);
+							markerCiblePorteur(e.target.properties.id_porteur);
+							});
+					}
+				}
 			}
 			showPictosPorteurs();
 		}
@@ -419,10 +426,6 @@
 /* FICHES OPERATIONS ET PORTEURS */
 
 		//Fonctions de formatage de nombres
-		function format1(nombre){ //2 chiffres après la virgule
-		  nombre=parseFloat(nombre).toFixed(2);
-		  return nombre;
-		}
 		function format2(nombre){ //séparateurs de milliers
 		  nombre=parseFloat(nombre).toFixed(0);
 		  nombre += '';
@@ -433,15 +436,7 @@
 		  }
 		  return nombre;
 		}
-		function format3(nombre){ // pas de chiffre après la virgule
-		  nombre=parseFloat(nombre).toFixed(0);
-		  return nombre;
-		}
-		function format4(nombre){ // valeur absolue
-		  nombre=parseFloat(nombre).toFixed(2);
-		  return Math.abs(nombre);
-		}
-		
+
 		//Action au clic sur un marker
 		function infosOperations(e) {
 			//ouverture de la sidebar
@@ -499,8 +494,8 @@
 					if(porteur_select.properties.id_porteur == operations.getLayers()[i].properties.id_porteur){
 						document.getElementById("liste_operations").innerHTML += 
 						"<div class='liste' " +
-						"onclick='markerCible("+operations.getLayers()[i].properties.lat+","+operations.getLayers()[i].properties.lng+", operations); infosOperations(\""+operations.getLayers()[i].properties.id_operation+"\")'" +
-						"onmouseover='markerSelect("+operations.getLayers()[i].properties.lat+","+operations.getLayers()[i].properties.lng+");'" +
+						"onclick='markerCible(\""+operations.getLayers()[i].properties.id_operation+"\"); infosOperations(\""+operations.getLayers()[i].properties.id_operation+"\")'" +
+						"onmouseover='markerSelect(\""+operations.getLayers()[i].properties.id_operation+"\");'" +
 						"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
 						">" + operations.getLayers()[i].properties.nom_operation + "</div>" ;
 					}
@@ -512,22 +507,47 @@
 	
 /* ACTIONS */
 	
-		//Activer le marker
+		//Activer le marker Opérations
 		var markerCib;
-		function markerCible(la,lo,pane) {
+		function markerCible(id) {
 			if(markerCib) {map.removeLayer(markerCib);}
-			markerCib = new L.marker(new L.latLng([la, lo]));
-			if (pane == "porteurs") {markerCib.setIcon(porteur_active);}
-			else {markerCib.setIcon(operation_active);}
+			operationsSelect.eachLayer(function(layer){
+				if (layer.properties.id_operation == id) {
+					coords = layer._latlng;
+					}
+			});
+			markerCib = new L.marker(new L.latLng(coords));
+			markerCib.setIcon(operation_active);	
+			markerCib.setZIndexOffset(-50);
+			markerCib.addTo(map);
+		}
+		
+		//Activer le marker Porteurs
+		var markerCib;
+		function markerCiblePorteur(id) {
+			if(markerCib) {map.removeLayer(markerCib);}
+			porteursSelect.eachLayer(function(layer){
+				if (layer.properties.id_porteur == id) {
+					coords = layer._latlng;
+					}
+			});
+			markerCib = new L.marker(new L.latLng(coords));
+			markerCib.setIcon(porteur_active);	
 			markerCib.setZIndexOffset(-50);
 			markerCib.addTo(map);
 		}
 		
 		//Sélection du marker onhover depuis le panneau latéral
 		var markerSelec;
-		function markerSelect(la,lo) {
+		var coords;
+		function markerSelect(id) {
 			if(markerSelec) {map.removeLayer(markerSelec);}
-			markerSelec = new L.marker(new L.latLng([la, lo]), {icon: operation_on});
+			operationsSelect.eachLayer(function(layer){
+				if (layer.properties.id_operation == id) {
+					coords = layer._latlng;
+					}
+			});
+			markerSelec = new L.marker(new L.latLng(coords), {icon: operation_on});
 			markerSelec.setZIndexOffset(-50);
 			markerSelec.addTo(map);
 		}
@@ -576,7 +596,7 @@
 			document.getElementById("liste_toutes_operations").innerHTML +=
 				"<div class='liste' " +
 				"onclick='markerCible("+e.properties.lat+","+e.properties.lng+", operations); infosOperations(\""+e.properties.id_operation+"\")'" +
-				"onmouseover='markerSelect("+e.properties.lat+","+e.properties.lng+");'" +
+				"onmouseover='markerSelect(\""+e.properties.id_operation+"\");'" +
 				"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
 				">" + e.properties.nom_operation + "</div>" ;
 		}
@@ -667,16 +687,15 @@
 	
 	function reinitlistOperations() {
 		listOperations = [];
-		operations.eachLayer(function(layer){
+		operationsSelect.eachLayer(function(layer){
 			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
 		});	
 		awesomplete.list = listOperations;
 	}
 	
 	// liste de recherche par nom
-	operations.eachLayer(function(layer){
+	operationsSelect.eachLayer(function(layer){
 			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
-			console.log(listOperations);
 		});	
 	
 	// outil d'autocompletion
@@ -688,17 +707,7 @@
 			}
 		});
 		
-	//Retourne les coordonnées à partir d'un identifiant d'opération
-		var coords;
-		function returnCoords(e) {
-			operations.eachLayer(function(layer){
-				if (layer.properties.id_operation == e) {
-					coords = layer._latlngs;
-					}
-			});
-			console.log(coords);
-			return coords;
-		}
+	
 
 
 		

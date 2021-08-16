@@ -380,9 +380,9 @@ _.ITEM = function (text, input, item_id) {
 	document.getElementById("liste_toutes_operations").innerHTML = "";
 	return $.create("div", {
 		innerHTML: "<div class='liste'" +
-				"onclick='infosOperations(\""+text.value+"\"); returnCoords((\""+text.value+"\")'" +
-				//"onmouseover='console.log(returnCoords(\""+text.value+"\"))'" +
-				//"onmouseout='polylineCoopThin.clearLayers(); map.removeLayer(geomCibHover);'>" +
+				"onclick='infosOperations(\""+text.value+"\");markerCible(\""+text.value+"\")'" +
+				"onmouseover='markerSelect(\""+text.value+"\");'" +
+				"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
 				">" + html + "</div>" ,
 		"role": "option",
 		"aria-selected": "false",
