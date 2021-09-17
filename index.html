@@ -41,7 +41,7 @@
         <div class="sidebar-content">
             <div class="sidebar-pane" id="home">
                 
-				<h1>Carte interactive du fond de restructuration des locaux d’activité 
+				<h1>Carte interactive du fonds de restructuration des locaux d’activité 
 				<span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
 				
@@ -60,7 +60,7 @@
 					</div>
 					
 					<div class="button_container">
-						<div class="bouton" onclick="retourAcceuil();initFiltres();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les opérations</div>
+						<div class="bouton" onclick="retourAcceuil();initFiltres();" title="Explorer les coopérations"><span style="font-size:1.2em;">Voir</span></br>les porteurs et</br>les opérations</div>
 					</div>
 					
 					<div id="sources" style="width:100%;">
@@ -181,7 +181,7 @@
 						</div>
 						
 						<div class="divTableCell">
-								<h3 class="divTableRow">Montant de l'opération en €</h3>
+								<h3 class="divTableRow">Montant de la subvention du fonds RLA</h3>
 								<div class="divTableRow description " id="montant_demande"></div>
 						</div>
 						
@@ -303,6 +303,7 @@
 					marker.properties.id_porteur = data[i].id_porteur;
 					marker.properties.nom_porteur = data[i].nom_porteur;
 					marker.properties.statut_porteur = data[i].statut_porteur;
+					marker.properties.num_operation = data[i].num_operation;
 					marker.properties.nom_operation = data[i].nom_operation;
 					marker.properties.id_demande = data[i].id_demande;
 					marker.properties.adresse_op = data[i].adresse;
@@ -399,14 +400,14 @@
 
 		//Fonctions de formatage de nombres
 		function format2(nombre){ //séparateurs de milliers
-		  nombre=parseFloat(nombre).toFixed(0);
-		  nombre += '';
-		  var sep = '&nbsp;';
-		  var reg = /(\d+)(\d{3})/;
-		  while( reg.test( nombre)) {
-			nombre = nombre.replace( reg, '$1' +sep +'$2');
-		  }
-		  return nombre;
+			// nombre=parseFloat(nombre).toFixed(0);
+			// nombre += '';
+			// var sep = '&nbsp;';
+			// var reg = /(\d+)(\d{3})/;
+			// while( reg.test( nombre)) {
+			// 	nombre = nombre.replace( reg, '$1' +sep +'$2');
+			// }
+			return nombre;
 		}
 
 		//Action au clic sur une opération
@@ -422,7 +423,7 @@
 			operations.eachLayer(function(layer){
 				if(layer.properties.id_operation==e){
 					//Remplissage de la popup
-					document.getElementById('nom_operation').innerHTML = layer.properties.nom_operation;
+					document.getElementById('nom_operation').innerHTML = `${layer.properties.num_operation} - ${layer.properties.nom_operation}`;
 					document.getElementById('nom_porteur_op').innerHTML ="<a onclick='' class='description'>"+layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") </a>";
 					document.getElementById('adresse_op').innerHTML = layer.properties.adresse_op+", "+layer.properties.nom_com_op;
 					document.getElementById('perimetre_intervention').innerHTML = layer.properties.perimetre_intervention;
@@ -561,7 +562,7 @@
 				"onclick='markerCible("+e.properties.lat+","+e.properties.lng+", operations); infosOperations(\""+e.properties.id_operation+"\")'" +
 				"onmouseover='markerSelect(\""+e.properties.id_operation+"\");'" +
 				"onmouseout='if(markerSelec) {map.removeLayer(markerSelec);}'" +
-				">" + e.properties.nom_operation + "</div>" ;
+				">" + e.properties.num_operation + " - " + e.properties.nom_operation + "</div>" ;
 		}
 		
 		function initFiltres(){
@@ -650,14 +651,20 @@
 	function reinitlistOperations() {
 		listOperations = [];
 		operationsSelect.eachLayer(function(layer){
-			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
+			listOperations.push({ 
+				label: `${layer.properties.num_operation} - ${layer.properties.nom_operation}`, 
+				value: layer.properties.id_operation, 
+				value1: layer.properties.lat });
 		});	
 		awesomplete.list = listOperations;
 	}
 	
 	// liste de recherche par nom
 	operationsSelect.eachLayer(function(layer){
-			listOperations.push({ label: layer.properties.nom_operation, value: layer.properties.id_operation, value1: layer.properties.lat });
+			listOperations.push({ 
+				label: `${layer.properties.num_operation} - ${layer.properties.nom_operation}`, 
+				value: layer.properties.id_operation, 
+				value1: layer.properties.lat });
 		});	
 	
 	// outil d'autocompletion
