@@ -1,8 +1,8 @@
-#Carte interactive du fond de restructuration des locaux d'activité
+#Carte interactive du fonds de restructuration des locaux d'activité
 En cours de développement
 	
 Lien d'accès à la carte interactive :	
-https://anct-carto.github.io/fond_RLA/
+https://anct-carto.github.io/fonds_rla/
 
 Les cartes sont réalisées par le service cartographie de l'ANCT :
 https://cartotheque.anct.gouv.fr/cartes
