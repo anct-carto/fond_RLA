@@ -54,8 +54,8 @@
 						<p>Cette carte interactive recense l’ensemble des porteurs, programmes d’intervention et projets soutenus par ce fonds (localisation et nature des projets, part de financement apportée par le Fonds). Elle permet de <strong>visualiser <span id="operations_carte"></span> opérations</strong>, ainsi que leurs <strong>porteurs.</strong></p>
 						
 						<div>
-							<div style=""><img src="img/picto_operation_off.png" alt="picto_operation" style="width:22px; padding:6px; vertical-align: middle;"/>Opération</div>
-							<div style=""><img src="img/picto_porteur_off.png" alt="picto_porteur" style="width:35px; vertical-align: middle;"/>Porteur</div>
+							<div><img src="img/picto_operation_off.png" alt="picto_operation" style="width:22px; padding:6px; vertical-align: middle;"/>Opération</div>
+							<div><img src="img/picto_porteur_off.png" alt="picto_porteur" style="width:35px; vertical-align: middle;"/>Porteur</div>
 						</div>
 					</div>
 					
@@ -159,6 +159,10 @@
 						<div class="divTableCell">
 								<h3 class="divTableRow">Porteur</h3>
 								<div class="divTableRow description" id="nom_porteur_op"></div>
+						</div>
+						<div class="divTableCell">
+								<h3 class="divTableRow">Type porteur</h3>
+								<div class="divTableRow description" id="type_porteur_op"></div>
 						</div>
 						<div class="divTableCell">
 								<h3 class="divTableRow">Adresse de l'opération</h3>
@@ -303,6 +307,7 @@
 					marker.properties.id_porteur = data[i].id_porteur;
 					marker.properties.nom_porteur = data[i].nom_porteur;
 					marker.properties.statut_porteur = data[i].statut_porteur;
+					marker.properties.type_porteur = data[i].type_porteur;
 					marker.properties.num_operation = data[i].num_operation;
 					marker.properties.nom_operation = data[i].nom_operation;
 					marker.properties.id_demande = data[i].id_demande;
@@ -319,10 +324,11 @@
 					marker.properties.date_copil = data[i].date_copil;
 					
 					marker.bindTooltip(data[i].nom_operation, {className: 'Tooltips Tooltip_operation', direction: "center", sticky:true});
+					
 					marker.on('click', function(e) {
 						infosOperations(e.target.properties.id_operation);
 						markerCible(e.target.properties.id_operation);
-						});
+					});
 					
 					listePorteurs.push(marker.properties.id_porteur); //écrire la liste des porteurs qui vont être représentés sur la carte (ceux qui ont des opérations en cours)
 					
@@ -425,6 +431,7 @@
 					//Remplissage de la popup
 					document.getElementById('nom_operation').innerHTML = `${layer.properties.num_operation} - ${layer.properties.nom_operation}`;
 					document.getElementById('nom_porteur_op').innerHTML ="<a onclick='' class='description'>"+layer.properties.nom_porteur+" ("+layer.properties.statut_porteur+") </a>";
+					document.getElementById('type_porteur_op').innerHTML = layer.properties.type_porteur;
 					document.getElementById('adresse_op').innerHTML = layer.properties.adresse_op+", "+layer.properties.nom_com_op;
 					document.getElementById('perimetre_intervention').innerHTML = layer.properties.perimetre_intervention;
 					document.getElementById('nb_locaux_op').innerHTML = layer.properties.nb_locaux_op;
